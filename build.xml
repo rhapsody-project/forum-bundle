@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<!--
+    Doctrine 2 build file.
+-->
+
+<project name="RhapsodyProjectForumBundle" default="build" basedir=".">
+
+    <property file="build.properties" />
+
+    <!--
+        Fileset for artifacts shared across all distributed packages.
+    -->
+    <fileset id="shared-artifacts" dir=".">
+        <include name="LICENSE"/>
+    </fileset>
+
+</project>
