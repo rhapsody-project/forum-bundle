@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="" >
+    <body>
+      <trans-unit id="rhapsody.forum.misc.edit">
+        <source>rhapsody.forum.misc.edit</source>
+        <target>edit</target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.misc.flag">
+        <source>rhapsody.forum.misc.flag</source>
+        <target>flag</target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.misc.next">
+        <source>rhapsody.forum.misc.next</source>
+        <target><![CDATA[Next&nbsp;&raquo;]]></target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.misc.previous">
+        <source>rhapsody.forum.misc.previous</source>
+        <target><![CDATA[&laquo;&nbsp;Previous]]></target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.misc.quote">
+        <source>rhapsody.forum.misc.quote</source>
+        <target>quote</target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.misc.share">
+        <source>rhapsody.forum.misc.share</source>
+        <target>share</target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.topic.created">
+        <source>rhapsody.forum.topic.created</source>
+        <target>Topic successfully created!</target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.post.created">
+        <source>rhapsody.forum.post.created</source>
+        <target>Successfully replied!</target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.post.edit_title">
+        <source>rhapsody.forum.post.edit_title</source>
+        <target>edit this post</target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.post.flag_title">
+        <source>rhapsody.forum.post.flag_title</source>
+        <target>privately flag this post for attention or send a private notification about it</target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.post.last_edited_on">
+        <source>rhapsody.forum.post.last_edited_on</source>
+        <target>post last edited on %date%</target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.post.quote_title">
+        <source>rhapsody.forum.post.quote_title</source>
+        <target>quote this post in a reply</target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.post.share_title">
+        <source>rhapsody.forum.post.share_title</source>
+        <target>share a link to this post</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

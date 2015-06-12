@@ -29,7 +29,7 @@ namespace Rhapsody\ForumBundle\Model;
 
 /**
  *
- * @author 	  Sean W. Quinn
+ * @author    Sean W. Quinn
  * @category  Rhapsody ForumBundle
  * @package   Rhapsody\ForumBundle\Model
  * @copyright Copyright (c) 2013 Rhapsody Project
@@ -46,7 +46,7 @@ class Poll
 	 * @access protected
 	 */
 	protected $title;
-	
+
 	/**
 	 * Text (for added clarification) of the poll being taken.
 	 * @property string
@@ -67,4 +67,9 @@ class Poll
 	 * @access protected
 	 */
 	protected $numberOfOptions;
+
+	public function __construct()
+	{
+		
+	}
 }

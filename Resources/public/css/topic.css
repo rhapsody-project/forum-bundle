@@ -1,0 +1,42 @@
+table.topic-list {
+  margin: 0px 0px 10px;
+}
+table.topic-list th:first-of-type, table.topic-list td:first-of-type {
+  padding-left: 10px;
+}
+
+table.topic-list th, table.topic-list td {
+  padding: 12px 5px;
+  line-height: 1.25; text-align: left; vertical-align: middle;
+}
+
+table.topic-list th { color: #919191; font-weight: normal; font-size: 1em; }
+
+table.topic-list thead th.topic-column {}
+table.topic-list tbody tr.topic-list-item {}
+
+table.topic-list .sortable {
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+table.topic-list .num {
+  text-align: center;
+}
+
+table.topic-list .default {}
+table.topic-list .posters { width: 145px; min-width: 145px; }
+table.topic-list .category {}
+table.topic-list .posts { width: 65px; }
+table.topic-list .views { width: 65px; }
+table.topic-list .activity { width: 60px; }
+
+table.topic-list tr.category-uncategorized {}
+table.topic-list tr.has-excerpt {}
+
+table.topic-list .topic-statuses {}
+table.topic-list a.topic-title {}
+table.topic-list .topic-post-badges {}
+table.topic-list .topic-excerpt {}

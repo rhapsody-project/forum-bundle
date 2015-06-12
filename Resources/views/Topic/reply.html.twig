@@ -1,0 +1,57 @@
+{# Copyright (c) 2015 Rhapsody Project
+ #
+ # Licensed under the MIT License (http://opensource.org/licenses/MIT)
+ #
+ # Permission is hereby granted, free of charge, to any
+ # person obtaining a copy of this software and associated
+ # documentation files (the "Software"), to deal in the
+ # Software without restriction, including without limitation
+ # the rights to use, copy, modify, merge, publish,
+ # distribute, sublicense, and/or sell copies of the Software,
+ # and to permit persons to whom the Software is furnished
+ # to do so, subject to the following conditions:
+ #
+ # The above copyright notice and this permission notice
+ # shall be included in all copies or substantial portions of
+ # the Software.
+ #
+ # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+ # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ # PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+ # OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ # OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ #}
+{% trans_default_domain "RhapsodyForumBundle" %}
+<div>
+  <ul class="crumbs">
+      <li><a href="">Forum</a></li>
+      <li><a href="{{ rhapsody_forum_category_url(topic.category) }}">{{ topic.category.name|default('Uncategorized') }}</a></li>
+      <li><a href="{{ rhapsody_forum_topic_url(topic) }}">{{ topic.title }}</a></li>
+      <li>New Reply</li>
+  </ul>
+  <section class="topic-reply">
+    <div class="row">
+      <div class="col-xs-12">
+        <form action="{{ rhapsody_forum_post_create_url(topic) }}" method="post">
+          {{ form_widget(form) }}
+          <div class="pull-right">
+            <button type="submit" name="reply" class="btn btn-primary">Add post</button>
+            <span><a href="{{ rhapsody_forum_topic_url(topic) }}">Cancel</a></span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="topic-review">
+    <div class="row">
+      <div class="col-xs-12">Topic Review</div>
+    </div>
+    <div class="row">
+      {% include 'RhapsodyForumBundle:Post:list.html.twig' with { 'posts': posts } %}
+    </div>
+  </section>
+</div>

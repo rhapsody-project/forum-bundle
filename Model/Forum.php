@@ -27,9 +27,11 @@
  */
 namespace Rhapsody\ForumBundle\Model;
 
+use Rhapsody\Commons\Web\SlugInflector;
+
 /**
  *
- * @author 	  Sean W. Quinn
+ * @author    Sean W. Quinn
  * @category  Rhapsody ForumBundle
  * @package   Rhapsody\ForumBundle\Model
  * @copyright Copyright (c) 2013 Rhapsody Project
@@ -37,53 +39,205 @@ namespace Rhapsody\ForumBundle\Model;
  * @version   $Id$
  * @since     1.0
  */
-class Forum
+class Forum implements ForumInterface
 {
-	/* The forum is marked as a category, categories cannot have topics. */
-	const FORUM_TYPE_CATEGORY = 'category';
-	
-	/* The forum is marked as a normal forum. */
-	const FORUM_TYPE_FORUM = 'forum';
 
 	/**
 	 * The identifier for the forum.
-	 * @property mixed
+	 * @var mixed
 	 * @access protected
 	 */
 	protected $id;
-	
+
+	/**
+	 * The date that the forum was created.
+	 * @var \DateTime
+	 * @access protected
+	 */
+	protected $created;
+
+	/**
+	 * The description of the forum.
+	 * @var string
+	 * @access protected
+	 */
+	protected $description;
+
+	/**
+	 * Whether the forum is enabled or not.
+	 * @var boolean
+	 * @access protected
+	 */
+	protected $enabled;
+
 	/**
 	 * The name of the forum.
-	 * @property string
+	 * @var string
 	 * @access protected
 	 */
 	protected $name;
 
 	/**
-	 * The type of the forum.
-	 * @property string
-	 * @access protected
-	 */
-	protected $type;
-	
-	/**
-	 * The display order of the forum, with relation to its siblings.
-	 * @property int
+	 * The display order of the forum, with relation to its siblings. A
+	 * forum with a lower order value will display before forums with higher
+	 * order values.
+	 * @var int
 	 * @access protected
 	 */
 	protected $order;
-	
+
 	/**
-	 * Forums can be embedded one-within-another.
-	 * @property Forum
+	 * The collection of categories in this forum.
+	 * @var array
 	 * @access protected
 	 */
-	protected $forum;
-	
+	protected $categories = array();
+
 	/**
-	 * The collection of topics in this forum.
-	 * @property array
-	 * @access protected
+	 * Constructor for the forum model.
 	 */
-	protected $topics;
+	public function __construct()
+	{
+		$this->created = new \DateTime;
+		$this->categories = array();
+		$this->enabled = true;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::getCategories()
+	 */
+	public function getCategories()
+	{
+		return $this->categories;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::getCreated()
+	 */
+	public function getCreated()
+	{
+		return $this->created;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::getDescription()
+	 */
+	public function getDescription()
+	{
+		return $this->description;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::getId()
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::getName()
+	 */
+	public function getName()
+	{
+		return $this->name;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::getOrder()
+	 */
+	public function getOrder()
+	{
+		return $this->order;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::isEnabled()
+	 */
+	public function isEnabled()
+	{
+		return $this->enabled;
+	}
+
+	/**
+	 * Sets the creation date of the forum.
+	 * @param \DateTime $created the creation date.
+	 */
+	public function setCreated(\DateTime $created)
+	{
+		$this->created = $created;
+	}
+
+	/**
+	 * Sets the description of the forum.
+	 * @param string $description the description.
+	 */
+	public function setDescription($description)
+	{
+		$this->description = $description;
+	}
+
+	/**
+	 * Sets the enabled status of the forum.
+	 * @param boolean $enabled whether to enable or disable the forum.
+	 */
+	public function setEnabled($enabled)
+	{
+		$this->enabled = $enabled;
+	}
+
+	/**
+	 * Sets the identifier of the forum.
+	 * @param mixed $id the identifier.
+	 */
+	public function setId($id)
+	{
+		$this->id = $id;
+	}
+
+	/**
+	 * Sets the last index date of the forum.
+	 * @param \DateTime $lastIndexed the last indexed date.
+	 */
+	public function setLastIndexed(\DateTime $lastIndexed)
+	{
+		$this->lastIndexed = $lastIndexed;
+	}
+
+	/**
+	 * Sets the creation date of the forum.
+	 * @param \DateTime $created the creation date.
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
+	}
+
+	/**
+	 * Sets the numerical ordering of the forum for sort algorithms. A lower
+	 * value gives higher priority to the forum, and therefore displays it
+	 * higher in the list of categories.
+	 *
+	 * @param int $order the order to display the forum in.
+	 */
+	public function setOrder($order)
+	{
+		$this->order = $order;
+	}
+
+	/**
+	 * Sets the collection of topics on the forum.
+	 * @param array $topics the collection of topics.
+	 */
+	public function setCategories($categories)
+	{
+		$this->categories = $categories;
+	}
 }

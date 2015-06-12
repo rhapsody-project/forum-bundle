@@ -29,7 +29,7 @@ namespace Rhapsody\ForumBundle\Model;
 
 /**
  *
- * @author 	  Sean W. Quinn
+ * @author    Sean W. Quinn
  * @category  Rhapsody ForumBundle
  * @package   Rhapsody\ForumBundle\Model
  * @copyright Copyright (c) 2013 Rhapsody Project
@@ -37,114 +37,367 @@ namespace Rhapsody\ForumBundle\Model;
  * @version   $Id$
  * @since     1.0
  */
-class Post
+class Post implements PostInterface, AuthorAwareInterface, ForumAwareInterface, TopicAwareInterface
 {
 
 	/**
 	 * The identifier for the post.
-	 * @property mixed
+	 * @var mixed
 	 * @access protected
 	 */
 	protected $id;
 
 	/**
+	 * Whether the post has been approved or not. When initialized a post will
+	 * have its approval flag set to <tt>true</tt>, for forum configurations
+	 * that require moderator approval before being visible the post must have
+	 * its <tt>$approved</tt> flag set to false explicitly.
+	 * @var boolean
+	 * @access protected
+	 */
+	protected $approved;
+
+	/**
+	 * The files that have been attached to this post.
+	 * @var array
+	 * @access protected
+	 */
+	protected $attachments;
+
+	/**
 	 * The author of the post.
-	 * @property mixed
+	 * @var mixed
 	 * @access protected
 	 */
 	protected $author;
-	
+
 	/**
-	 * The topic that this post belongs to.
-	 * @property Topic
+	 * The date and time that this post was created.
+	 * @var \DateTime
 	 * @access protected
 	 */
-	protected $topic;
-	
+	protected $created;
+
+	/**
+	 * The number of times that the post has been edited.
+	 * @var int
+	 * @access protected
+	 */
+	protected $editCount;
+
+	/**
+	 * The forum that this post belongs to.
+	 * @var ForumInterface
+	 * @access protected
+	 */
+	protected $forum;
+
+	/**
+	 * The numerical index of the post, relative to its topic.
+	 * @var int
+	 * @access protected
+	 */
+	protected $index;
+
+	/**
+	 * The date and time that this post was last updated. Equal to the
+	 * <tt>$created</tt> date if the post has never been edited.
+	 * @var \DateTime
+	 * @access protected
+	 */
+	protected $lastUpdated;
+
+	/**
+	 * The number of times that this post has been liked.
+	 * @var int
+	 * @access protected
+	 */
+	protected $likes = 0;
+
 	/**
 	 * If a this is a reply to a preceding post, <tt>$replyTo</tt> is the
 	 * reference to that <tt>Post</tt>.
-	 * @property Post
+	 * @var Post
 	 * @access protected
 	 */
 	protected $replyTo;
 
 	/**
+	 * The revision history of the post.
+	 * @var array
+	 * @access protected
+	 */
+	protected $revisions = array();
+
+	/**
+	 * Tracks the score of the post; this roughly translates into how many people
+	 * have "liked" the post.
+	 * @var int
+	 * @access protected
+	 */
+	protected $score;
+
+	/**
 	 * The subject of this post.
-	 * @property string
+	 * @var string
 	 * @access protected
 	 */
 	protected $subject;
-	
+
 	/**
 	 * The text of this post.
-	 * @property string
+	 * @var string
 	 * @access protected
 	 */
 	protected $text;
-	
-	/**
-	 * The markup format of this post. E.g. <tt>bbcode</tt>, <tt>markdown</tt>,
-	 * etc.
-	 * @property string
-	 * @access protected
-	 */
-	protected $format;
 
 	/**
-	 * The time thate this post was created.
-	 * @property int
+	 * The topic that this post belongs to.
+	 * @var TopicInterface
 	 * @access protected
 	 */
-	protected $timestamp;
-	
+	protected $topic;
+
+	public function __construct()
+	{
+		$this->approved = true;
+		$this->created = new \DateTime();
+		$this->lastUpdated = new \DateTime();
+	}
+
 	/**
-	 * The last user to edit this post.
-	 * @property mixed
-	 * @access protected
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::getAttachments()
 	 */
-	protected $editor;
-	
-	/**
-	 * The reason for editing the post.
-	 * @property string
-	 * @access protected
-	 */
-	protected $reason;
-	
-	/**
-	 * The timestamp of the edit, or equal to the <tt>$timestamp</tt> if the 
-	 * post has never been edited.
-	 * @property int
-	 * @access protected
-	 */
-	protected $lastUpdated;
-	
-	/**
-	 * The files that have been attached to this post.
-	 * @property
-	 */
-	protected $attachments;
-	
 	public function getAttachments()
 	{
 		return $this->attachements;
 	}
-	
+
 	/**
-	 * <p>
-	 * Returns the <tt>$author</tt> of this post.
-	 * </p>
-	 *
-	 * @return IForumUser the forum user who authored this post.
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\AuthorAwareInterface::getAuthor()
 	 */
 	public function getAuthor()
 	{
 		return $this->author;
 	}
-	
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::getCreated()
+	 */
+	public function getCreated()
+	{
+		return $this->created;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::getEditCount()
+	 */
+	public function getEditCount()
+	{
+		return $this->editCount;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\ForumAwareInterface::getForum()
+	 */
+	public function getForum()
+	{
+		return $this->forum;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::getCreated()
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::getIndex()
+	 */
+	public function getIndex()
+	{
+		return $this->index;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::getLastUpdated()
+	 */
 	public function getLastUpdated()
 	{
 		return $this->lastUpdated;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::getRevisions()
+	 */
+	public function getRevisions()
+	{
+		return $this->revisions;
+	}
+
+	/**
+	* (non-PHPDoc)
+	* @see \Rhapsody\ForumBundle\Model\PostInterface::getSubject()
+	*/
+	public function getSubject()
+	{
+		return $this->subject;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::getText()
+	 */
+	public function getText()
+	{
+		return $this->text;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\TopicAwareInterface::getTopic()
+	 */
+	public function getTopic()
+	{
+		return $this->topic;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::isApproved()
+	 */
+	public function isApproved()
+	{
+		return $this->approved;
+	}
+
+	/**
+	 * Sets the flag indicating that the post has been approved.
+	 *
+	 * @param boolean $approved the approval flag.
+	 */
+	public function setApproved($approved)
+	{
+		$this->approved = $approved;
+	}
+
+	/**
+	 * Sets the collection of attachments on the post.
+	 *
+	 * @param mixed $attachements the attachments.
+	 */
+	public function setAttachments($attachements)
+	{
+		$this->attachements = $attachements;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\AuthorAwareInterface::setAuthor()
+	 */
+	public function setAuthor($author)
+	{
+		$this->author = $author;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::setCreated()
+	 */
+	public function setCreated($created)
+	{
+		$this->created = $created;
+	}
+
+	/**
+	 * Sets the number of times that this post has been edited.
+	 * @param int $editCount the edit count.
+	 */
+	public function setEditCount($editCount)
+	{
+		$this->editCount = $editCount;
+	}
+
+	/**
+	 * Sets the forum that this post belongs to.
+	 * @param ForumInterface $forum the forum.
+	 */
+	public function setForum($forum)
+	{
+		$this->forum = $forum;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::setCreated()
+	 */
+	public function setId($id)
+	{
+		$this->id = $id;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::setIndex()
+	 */
+	public function setIndex($index)
+	{
+		$this->index = $index;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::setLastUpdated()
+	 */
+	public function setLastUpdated($lastUpdated)
+	{
+		$this->lastUpdated = $lastUpdated;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::setRevisions()
+	 */
+	public function setRevisions($revisions)
+	{
+		$this->revisions = $revisions;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::setSubject()
+	 */
+	public function setSubject($subject)
+	{
+		$this->subject = $subject;
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\PostInterface::setText()
+	 */
+	public function setText($text)
+	{
+		$this->text = $text;
+	}
+
+	/**
+	 * Sets the topic for this post.
+	 * @param TopicInterface $topic the topic.
+	 */
+	public function setTopic($topic)
+	{
+		$this->topic = $topic;
 	}
 }

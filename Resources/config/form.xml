@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+      <parameter key="rhapsody.forum.form.factory.form_factory.class">Rhapsody\ForumBundle\Form\Factory\FormFactory</parameter>
+		</parameters>
+
+    <services>
+      <service id="rhapsody_forum.forum.form.factory" class="%rhapsody.forum.form.factory.form_factory.class%">
+        <argument type="service" id="form.factory" />
+        <argument>%rhapsody_forum.forum.form.name%</argument>
+        <argument>%rhapsody_forum.forum.form.type%</argument>
+        <argument>%rhapsody_forum.forum.form.validation_groups%</argument>
+        <argument type="collection" />
+      </service>
+
+      <service id="rhapsody_forum.forum.form.type" class="Rhapsody\ForumBundle\Form\Type\ForumType">
+        <tag name="form.type" alias="rhapsody_forum_form_type_forum" />
+        <argument>%rhapsody_forum.model.forum.class%</argument>
+      </service>
+
+      <service id="rhapsody_forum.post.form.factory" class="%rhapsody.forum.form.factory.form_factory.class%">
+        <argument type="service" id="form.factory" />
+        <argument>%rhapsody_forum.post.form.name%</argument>
+        <argument>%rhapsody_forum.post.form.type%</argument>
+        <argument>%rhapsody_forum.post.form.validation_groups%</argument>
+        <argument type="collection" />
+      </service>
+
+      <service id="rhapsody_forum.post.form.type" class="Rhapsody\ForumBundle\Form\Type\PostType">
+        <tag name="form.type" alias="rhapsody_forum_form_type_post" />
+        <argument>%rhapsody_forum.model.post.class%</argument>
+      </service>
+
+      <service id="rhapsody_forum.topic.form.factory" class="%rhapsody.forum.form.factory.form_factory.class%">
+        <argument type="service" id="form.factory" />
+        <argument>%rhapsody_forum.topic.form.name%</argument>
+        <argument>%rhapsody_forum.topic.form.type%</argument>
+        <argument>%rhapsody_forum.topic.form.validation_groups%</argument>
+        <argument type="collection">
+          <argument key="post_form" type="service" id="rhapsody_forum.post.form.type" />
+          <argument key="post_class">%rhapsody_forum.post_class%</argument>
+        </argument>
+      </service>
+
+      <service id="rhapsody_forum.topic.form.type" class="Rhapsody\ForumBundle\Form\Type\TopicType">
+        <tag name="form.type" alias="rhapsody_forum_form_type_topic" />
+        <argument>%rhapsody_forum.model.topic.class%</argument>
+      </service>
+
+    </services>
+
+</container>

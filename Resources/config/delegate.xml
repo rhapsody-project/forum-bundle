@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+      <parameter key="rhapsody.forum.controller.delegate.category_delegate.class">Rhapsody\ForumBundle\Controller\Delegate\CategoryDelegate</parameter>
+      <parameter key="rhapsody.forum.controller.delegate.forum_delegate.class">Rhapsody\ForumBundle\Controller\Delegate\ForumDelegate</parameter>
+      <parameter key="rhapsody.forum.controller.delegate.post_delegate.class">Rhapsody\ForumBundle\Controller\Delegate\PostDelegate</parameter>
+      <parameter key="rhapsody.forum.controller.delegate.topic_delegate.class">Rhapsody\ForumBundle\Controller\Delegate\TopicDelegate</parameter>
+		</parameters>
+
+    <services>
+      <service id="rhapsody.forum.controller.delegate.category_delegate" class="%rhapsody.forum.controller.delegate.category_delegate.class%">
+        <call method="setContainer">
+          <argument type="service" id="service_container" />
+        </call>
+      </service>
+
+      <service id="rhapsody.forum.controller.delegate.forum_delegate" class="%rhapsody.forum.controller.delegate.forum_delegate.class%">
+        <call method="setContainer">
+          <argument type="service" id="service_container" />
+        </call>
+      </service>
+
+      <service id="rhapsody.forum.controller.delegate.post_delegate" class="%rhapsody.forum.controller.delegate.post_delegate.class%">
+        <call method="setContainer">
+          <argument type="service" id="service_container" />
+        </call>
+      </service>
+
+      <service id="rhapsody.forum.controller.delegate.topic_delegate" class="%rhapsody.forum.controller.delegate.topic_delegate.class%">
+        <call method="setContainer">
+          <argument type="service" id="service_container" />
+        </call>
+      </service>
+
+    </services>
+
+</container>

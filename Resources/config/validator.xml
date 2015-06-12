@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+      <parameter key="rhapsody.forum.validator.constraint_validator.class">Rhapsody\ForumBundle\Validator\ConstraintValidator</parameter>
+		</parameters>
+
+    <services>
+
+      <service id="rhapsody.forum.validator.category.constraint_validator" class="%rhapsody.forum.validator.constraint_validator.class%">
+        <argument type="collection" />
+      </service>
+
+      <service id="rhapsody.forum.validator.forum.constraint_validator" class="%rhapsody.forum.validator.constraint_validator.class%">
+        <argument type="collection" />
+      </service>
+
+      <service id="rhapsody.forum.validator.post.constraint_validator" class="%rhapsody.forum.validator.constraint_validator.class%">
+        <argument type="collection" />
+      </service>
+
+      <service id="rhapsody.forum.validator.topic.constraint_validator" class="%rhapsody.forum.validator.constraint_validator.class%">
+        <argument type="collection" />
+      </service>
+
+    </services>
+
+</container>

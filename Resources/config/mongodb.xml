@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+					 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+					 xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+		<parameters>
+			<parameter key="rhapsody.forum.doctrine.category_manager.class">Rhapsody\ForumBundle\Doctrine\ODM\MongoDB\CategoryManager</parameter>
+			<parameter key="rhapsody.forum.doctrine.forum_manager.class">Rhapsody\ForumBundle\Doctrine\ODM\MongoDB\ForumManager</parameter>
+			<parameter key="rhapsody.forum.doctrine.post_manager.class">Rhapsody\ForumBundle\Doctrine\ODM\MongoDB\PostManager</parameter>
+			<parameter key="rhapsody.forum.doctrine.topic_manager.class">Rhapsody\ForumBundle\Doctrine\ODM\MongoDB\TopicManager</parameter>
+		</parameters>
+
+		<services>
+
+			<service id="rhapsody.forum.doctrine.document_manager" factory-service="doctrine_mongodb" factory-method="getManager"
+					class="Doctrine\ODM\MongoDB\DocumentManager" public="false" />
+
+			<service id="rhapsody.forum.doctrine.category_manager" class="%rhapsody.forum.doctrine.category_manager.class%">
+				<argument type="service" id="rhapsody.forum.doctrine.document_manager" />
+				<argument type="service" id="event_dispatcher" />
+				<argument type="service" id="rhapsody.forum.factory.category_builder_factory" />
+				<argument>%rhapsody_forum.model.category.class%</argument>
+			</service>
+
+			<service id="rhapsody.forum.doctrine.forum_manager" class="%rhapsody.forum.doctrine.forum_manager.class%">
+				<argument type="service" id="rhapsody.forum.doctrine.document_manager" />
+				<argument type="service" id="event_dispatcher" />
+				<argument type="service" id="rhapsody.forum.factory.forum_builder_factory" />
+				<argument>%rhapsody_forum.model.forum.class%</argument>
+			</service>
+
+			<service id="rhapsody.forum.doctrine.post_manager" class="%rhapsody.forum.doctrine.post_manager.class%">
+				<argument type="service" id="rhapsody.forum.doctrine.document_manager" />
+				<argument type="service" id="event_dispatcher" />
+				<argument type="service" id="rhapsody.forum.factory.post_builder_factory" />
+				<argument>%rhapsody_forum.model.post.class%</argument>
+			</service>
+
+			<service id="rhapsody.forum.doctrine.topic_manager" class="%rhapsody.forum.doctrine.topic_manager.class%">
+				<argument type="service" id="rhapsody.forum.doctrine.document_manager" />
+				<argument type="service" id="event_dispatcher" />
+				<argument type="service" id="rhapsody.forum.factory.topic_builder_factory" />
+				<argument type="service" id="rhapsody.forum.doctrine.post_manager" />
+				<argument>%rhapsody_forum.model.topic.class%</argument>
+			</service>
+		</services>
+
+</container>

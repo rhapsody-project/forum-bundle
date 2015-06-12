@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mongo-mapping
+    xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+        http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <mapped-superclass name="Rhapsody\ForumBundle\Document\Topic" collection="rhapsody.forum.topic"
+        repository-class="Rhapsody\ForumBundle\Repository\ODM\MongoDB\TopicRepository">
+
+        <field name="id" fieldName="id" id="true" />
+        <field name="approved" fieldName="approved" type="boolean" />
+        <field name="locked" fieldName="locked" type="boolean" />
+        <field name="created" fieldName="created" type="date" />
+        <field name="lastUpdated" fieldName="lastUpdated" type="date" />
+        <field name="postCount" fieldName="postCount" type="int" />
+        <field name="promotionDays" fieldName="promotionDays" type="int" />
+        <field name="replyCount" fieldName="replyCount" type="int" />
+        <field name="reported" fieldName="reported" type="boolean" />
+        <field name="slug" fieldName="slug" type="string" />
+        <field name="title" fieldName="title" type="string" />
+        <field name="type" fieldName="type" type="string" />
+        <field name="viewCount" fieldName="viewCount" type="int" />
+        <reference-one field="category" />
+        <reference-one field="forum" />
+        <reference-one field="post">
+            <cascade>
+                <all />
+            </cascade>
+        </reference-one>
+        <reference-one field="lastPost">
+            <cascade>
+                <persist />
+                <merge />
+                <refresh />
+            </cascade>
+        </reference-one>
+        <reference-one field="user" />
+        <embed-one field="poll" />
+
+        <indexes>
+            <index name="created_asc">
+                <key name="created" order="asc" />
+                <option name="safe" value="true" />
+                <option name="unique" value="false" />
+                <option name="dropDups" value="false" />
+            </index>
+            <index name="category_id_asc">
+                <key name="forum.$id" order="asc" />
+                <option name="safe" value="true" />
+                <option name="unique" value="false" />
+                <option name="dropDups" value="false" />
+            </index>
+            <index name="forum_id_asc">
+                <key name="forum.$id" order="asc" />
+                <option name="safe" value="true" />
+                <option name="unique" value="false" />
+                <option name="dropDups" value="false" />
+            </index>
+            <index name="slug">
+                <key name="slug" order="asc" />
+                <option name="safe" value="true" />
+                <option name="unique" value="false" />
+                <option name="dropDups" value="false" />
+            </index>
+        </indexes>
+
+    </mapped-superclass>
+
+</doctrine-mongo-mapping>

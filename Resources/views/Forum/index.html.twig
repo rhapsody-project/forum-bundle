@@ -1,0 +1,21 @@
+{% extends 'RhapsodyForumBundle::layout.html.twig' %}
+{% block title %}Simple forum bundle for Symfony{% endblock %}
+{% block content %}
+<div class="forum forum_index">
+		<ul class="crumbs">
+				<li>Forum</li>
+		</ul>
+		<div class="row">
+			<div class="topics col-xs-12">
+				<h2>Latest topics</h2>
+				{{ render(controller("RhapsodyForumBundle:Topic:list", { 'page': page })) }}
+			</div>
+			{#
+			<div class="side categories">
+					<h2>Categories</h2>
+					{ render(controller("RhapsodyForumBundle:Category:list")) }
+			</div>
+			#}
+		</div>
+</div>
+{% endblock %}

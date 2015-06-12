@@ -1,0 +1,56 @@
+{% trans_default_domain "RhapsodyForumBundle" %}
+{% set nextText = 'rhapsody.forum.misc.next'|trans|raw %}
+{% set prevText = 'rhapsody.forum.misc.previous'|trans|raw %}
+
+{% if pageCount > 1 %}
+  {% set startPage = current %}
+  {% set endPage = current %}
+  <ul class="pagination {{ paginationClassName|default('pagination-md') }}">
+
+  {% if previous is defined %}
+    <li>
+      <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}">{{ previous_label|default(prevText)|raw }}</a>
+    </li>
+  {% else %}
+    <li class="disabled">
+      <span>{{ previous_label|default(prevText)|raw }}</span>
+    </li>
+  {% endif %}
+
+  {% if startPage > 1 %}
+    <li>
+      <a href="{{ path(route, query|merge({(pageParameterName): 1})) }}">1</a>
+    </li>
+    {% if startPage != 2 %}
+      <li class="disabled">
+        <span>&hellip;</span>
+      </li>
+    {% endif %}
+  {% endif %}
+
+  <li class="active">
+    <span>{{ current }}</span>
+  </li>
+
+  {% if pageCount > endPage %}
+    {% if pageCount > (endPage + 1) %}
+        <li class="disabled">
+          <span>&hellip;</span>
+        </li>
+    {% endif %}
+    <li>
+      <a href="{{ path(route, query|merge({(pageParameterName): pageCount})) }}">{{ pageCount }}</a>
+    </li>
+  {% endif %}
+
+  {% if next is defined %}
+    <li>
+      <a href="{{ path(route, query|merge({(pageParameterName): next})) }}">{{ next_label|default(nextText)|raw }}</a>
+    </li>
+  {% else %}
+    <li class="disabled">
+      <span>{{ next_label|default(nextText)|raw }}</span>
+    </li>
+  {% endif %}
+  </ul>
+{% endif %}

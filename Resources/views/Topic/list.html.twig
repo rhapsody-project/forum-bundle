@@ -1,0 +1,59 @@
+<div class="row">
+  <div class="row">
+    <table class="topic-list table table-striped">
+      <thead>
+        <tr>
+          <th data-sort-order="default" class="topic-column default">Topic</th>
+          <th data-sort-order="posters" class="topic-column posters">Users</th>
+          <th data-sort-order="posts" class="topic-column posts sortable num">Replies</th>
+          <th data-sort-order="views" class="topic-column views sortable num">Views</th>
+          <th data-sort-order="activity" class="topic-column activity sortable num">Activity</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for topic in topics %}
+          <tr class="topic-list-item {{ rhapsody_forum_category_class(topic.category) }} has-excerpt">
+            <td class="main-link clearfix">
+              <a href="{{ rhapsody_forum_topic_url(topic) }}" class="title">{{ topic.title }}</a>
+              <span class="topic-post-badges"></span>
+            </td>
+            <td class="posters">
+              <a data-user-card="{{ topic.user.username|lower }}" classnames="trigger-user-card main-avatar" title="{{ topic.user.username }}" href="{{ rhapsody_forum_user_url(topic.user) }}">
+                {{ rhapsody_avatar(topic.user, { 'size': 'xs-avatar' }) }}
+              </a>
+            </td>
+            <td class="num posts" title="This topic has {{ topic.replyCount }} replies">
+              <span title="{{ topic.postCount }}">{{ topic.postCount }}</span>
+            </td>
+            <td class="num views">
+              <span class="number" title="this topic has been viewed {{ topic.viewCount }} times">{{ topic.viewCount }}</span>
+            </td>
+            <td class="num activity">
+              {% set post = topic.lastPost %}
+              {% set timestamp = topic.lastUpdated is empty ? '' : topic.lastUpdated.getTimestamp() %}
+              <a href="/t/test-what-the-heck/344/1">
+                <span class="relative-date" date-time="{{ timestamp }}" title="{{ timestamp|date('F j, Y g:ia') }}" data-format="tiny">{{ timestamp|time_since }}</span>
+              </a>
+            </td>
+          </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 text-center">
+      <div class="clearfix hidden-xs">
+         {{ knp_pagination_render(topics, 'RhapsodyForumBundle:Pagination:pagination.html.twig') }}
+      </div>
+      <div class="clearfix visible-xs">
+        {{
+          knp_pagination_render(topics, 'RhapsodyForumBundle:Pagination:mobile_pagination.html.twig', {}, {
+            'paginationClassName': 'pagination-sm',
+            'previous_label': '&laquo;',
+            'next_label': '&raquo;',
+          })
+        }}
+      </div>
+    </div>
+  </div>
+</div>

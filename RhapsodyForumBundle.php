@@ -27,13 +27,14 @@
  */
 namespace Rhapsody\ForumBundle;
 
+use Rhapsody\ForumBundle\DependencyInjection\Compiler\ValidatorPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Compiler\AddSecurityVotersPass;
 
 /**
  *
- * @author 	  Sean W. Quinn
+ * @author    Sean W. Quinn
  * @category  Rhapsody ForumBundle
  * @package   Rhapsody\ForumBundle
  * @copyright Copyright (c) 2013 Rhapsody Project
@@ -43,5 +44,9 @@ use Symfony\Bundle\SecurityBundle\DependencyInjection\Compiler\AddSecurityVoters
  */
 class RhapsodyForumBundle extends Bundle
 {
-
+	public function build(ContainerBuilder $container)
+	{
+			parent::build($container);
+			$container->addCompilerPass(new ValidatorPass());
+	}
 }

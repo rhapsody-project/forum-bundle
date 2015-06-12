@@ -1,0 +1,4 @@
+@import url("topic.css");
+@import url("post.css");
+
+a.simple, a.simple:hover { text-decoration: none; }

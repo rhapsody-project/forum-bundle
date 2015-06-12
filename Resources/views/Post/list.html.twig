@@ -1,0 +1,8 @@
+<ul class="forum post-list show-border list-unstyled">
+  {% for post in posts %}
+    {% set item_class = loop.index % 2 == 0 ? 'even' : 'odd' %}
+    <li class="post-item {{ item_class }}">
+      {% include 'RhapsodyForumBundle:Post:view.html.twig' with { 'post': post, 'index': loop.index } only %}
+    </li>
+  {% endfor %}
+</ul>

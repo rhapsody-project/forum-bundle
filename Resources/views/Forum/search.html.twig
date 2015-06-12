@@ -1,0 +1,14 @@
+<div class="forum forum_search">
+    <ul class="crumbs">
+        <li>Forum</li>
+    </ul>
+    <form class="clearfix" action="{{ url('rhapsody_forum_search') }}" method="get">
+        <div>
+            <label for="q">{{ form_label(form.query) }}</label>
+            <input type="text" name="q" value="{{ query }}" />
+        </div>
+        <div>
+            <button type="submit" value="Search">Search</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,15 @@
+<div class="forum category_show">
+    <ul class="crumbs">
+        <li>Forum</li>
+        <li>{{ category.name }}</li>
+    </ul>
+    <div class="main topics">
+        <h2>{{ category.name }}</h2>
+        {# <a href="{ rhapsody_forum_category_atom_feed(category) }" title="Atom feed" class="feed atom">Atom feed</a> #}
+        {# render 'RhapsodyForumBundle:Topic:list' with {...} only #}
+    </div>
+    <div class="side categories">
+        <h2>Categories</h2>
+        {% render 'RhapsodyForumBundle:Category:list' %}
+    </div>
+</div>

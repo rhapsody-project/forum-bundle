@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mongo-mapping
+    xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+        http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <mapped-superclass name="Rhapsody\ForumBundle\Document\Post" collection="rhapsody.forum.post"
+        repository-class="Rhapsody\ForumBundle\Document\PostRepository">
+
+        <field name="id" fieldName="id" id="true" />
+        <field name="approved" fieldName="approved" type="boolean" />
+        <field name="index" fieldName="index" type="int" />
+        <field name="editCount" fieldName="editCount" type="int" />
+        <field name="subject" fieldName="subject" type="string" />
+        <field name="text" fieldName="text" type="bin" />
+        <field name="created" fieldName="created" type="date" />
+        <field name="lastUpdated" fieldName="lastUpdated" type="date" />
+        <reference-one field="author" />
+        <reference-one field="forum" />
+        <reference-one field="replyTo" />
+        <reference-one field="topic">
+          <cascade>
+            <all />
+          </cascade>
+        </reference-one>
+
+        <indexes>
+          <index name="created_asc">
+            <key name="created" order="asc" />
+            <option name="safe" value="true" />
+            <option name="unique" value="false" />
+            <option name="dropDups" value="false" />
+          </index>
+          <index name="topic_id_asc">
+            <key name="topic.$id" order="asc" />
+            <option name="safe" value="true" />
+            <option name="unique" value="false" />
+            <option name="dropDups" value="false" />
+          </index>
+        </indexes>
+
+    </mapped-superclass>
+
+</doctrine-mongo-mapping>

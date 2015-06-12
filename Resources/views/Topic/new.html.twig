@@ -1,0 +1,15 @@
+<div class="forum topic_new">
+    <ul class="crumbs">
+        <li><a href="">Forum</a></li>
+        {# <li><a href="{ rhapsody_forum_category_url(topic.category) }">{ topic.category.name|default('Uncategorized') }</a></li> #}
+        <li>New Topic</li>
+    </ul>
+    <div class="main">
+        <h2>New Topic</h2>
+        <form action="{{ rhapsody_forum_topic_create_url(forum, category) }}" method="post">
+            {{ form_widget(form) }}
+            <button type="submit" name="create">Create topic</button>
+            <span><a href="{{ rhapsody_forum_url(forum, category) }}">Cancel</a></span>
+        </form>
+    </div>
+</div>
