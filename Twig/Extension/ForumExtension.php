@@ -123,6 +123,10 @@ class ForumExtension extends \Twig_Extension
 			'is_safe' => array('html')
 		));
 
+		$functions['rhapsody_forum_url'] = new \Twig_Function_Method($this, 'getForumUrl', array(
+			'is_safe' => array('html')
+		));
+
 		$functions['rhapsody_forum_post_create_url'] = new \Twig_Function_Method($this, 'getPostCreateUrl', array(
 			'is_safe' => array('html')
 		));
