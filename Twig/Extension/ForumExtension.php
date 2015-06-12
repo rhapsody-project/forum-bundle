@@ -147,6 +147,10 @@ class ForumExtension extends \Twig_Extension
 			'is_safe' => array('html')
 		));
 
+		$functions['rhapsody_forum_topic_create_url'] = new \Twig_Function_Method($this, 'getTopicCreateUrl', array(
+				'is_safe' => array('html')
+		));
+
 		$functions['rhapsody_forum_topic_url'] = new \Twig_Function_Method($this, 'getTopicUrl', array(
 			'is_safe' => array('html')
 		));
@@ -238,6 +242,13 @@ class ForumExtension extends \Twig_Extension
 			$params['page'] = $page;
 		}
 		return $this->routeTranslator->translate('rhapsody_forum_topic_view', $params, $this->getRoutingContext());
+	}
+
+	public function getTopicCreateUrl($forum)
+	{
+		$params = array('forum' => $forum->getId());
+		// TODO: Include post for quoting exercise...
+		return $this->routeTranslator->translate('rhapsody_forum_topic_create', $params, $this->getRoutingContext());
 	}
 
 	public function getTopicReplyUrl($topic, $options = array())
