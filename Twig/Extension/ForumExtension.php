@@ -244,7 +244,7 @@ class ForumExtension extends \Twig_Extension
 		return $this->routeTranslator->translate('rhapsody_forum_topic_view', $params, $this->getRoutingContext());
 	}
 
-	public function getTopicCreateUrl($forum)
+	public function getTopicCreateUrl($forum, $category = null)
 	{
 		$params = array('forum' => $forum->getId());
 		// TODO: Include post for quoting exercise...
