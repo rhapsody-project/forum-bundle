@@ -264,7 +264,7 @@ class ForumExtension extends \Twig_Extension
 
 	public function getTopicUserUrl($topic, $user)
 	{
-		$params = array('topic' => $topic->getId(), 'user' => $user->getUsername());
+		$params = array('topic' => $topic->getId(), 'u' => $user->getUsername());
 		return $this->routeTranslator->translate('rhapsody_forum_topic_view', $params, $this->getRoutingContext());
 	}
 
