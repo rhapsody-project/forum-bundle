@@ -74,7 +74,7 @@ class ForumBuilder
   /**
    *
    */
-  public function __construct(SecurityContextInterface $securityContext, $validators, $class)
+  public function __construct(SecurityContextInterface $securityContext, $validator, $class)
   {
     $this->class = $class;
     $this->securityContext = $securityContext;
