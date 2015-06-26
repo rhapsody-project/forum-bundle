@@ -112,11 +112,35 @@ class ForumManager implements ForumManagerInterface
 
 	/**
 	 * (non-PHPDoc)
+	 * @see Rhapsody\ForumBundle\Doctrine\PostManagerInterface::createPostBuilder()
+	 */
+	public function createForumBuilder()
+	{
+		return $this->builderFactory->createBuilder();
+	}
+
+	public function createForum(ForumInterface $forum)
+	{
+		$this->update($forum);
+		return $forum;
+	}
+
+	/**
+	 * (non-PHPDoc)
 	 * @see Rhapsody\ForumBundle\Doctrine\ForumManagerInterface::findById()
 	 */
 	public function findById($id)
 	{
 		return $this->repository->findById($id);
+	}
+
+	/**
+	 *
+	 */
+	public function newForum()
+	{
+		$forum = $this->createForumBuilder()->build();
+		return $forum;
 	}
 
 	/**

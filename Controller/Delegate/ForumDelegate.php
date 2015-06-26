@@ -56,10 +56,16 @@ class ForumDelegate extends Delegate
 	 */
 	public function createAction(Request $request)
 	{
+		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		$forumManager = $this->container->get('rhapsody.forum.doctrine.forum_manager');
+
 		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
 		$formFactory = $this->container->get('rhapsody_forum.forum.form.factory');
+
+		/** @var $forum \Rhapsody\ForumBundle\Model\ForumInterface */
+		$forum = $forumManager->newForum();
 		$form = $formFactory->createForm();
-		$form->setData(new Forum());
+		$form->setData($forum);
 
 		$response = $this->createResponseBuilder()
 			->setData(array('form' => $form->createView()))
@@ -89,10 +95,16 @@ class ForumDelegate extends Delegate
 	 */
 	public function newAction(Request $request)
 	{
+		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		$forumManager = $this->container->get('rhapsody.forum.doctrine.forum_manager');
+
 		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
 		$formFactory = $this->container->get('rhapsody_forum.forum.form.factory');
+
+		/** @var $forum \Rhapsody\ForumBundle\Model\ForumInterface */
+		$forum = $forumManager->newForum();
 		$form = $formFactory->createForm();
-		$form->setData(new Forum());
+		$form->setData($forum);
 
 		$response = $this->createResponseBuilder()
 			->setData(array('form' => $form->createView()))
