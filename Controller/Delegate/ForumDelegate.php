@@ -67,12 +67,12 @@ class ForumDelegate extends Delegate
 		$form = $formFactory->createForm();
 		$form->setData($forum);
 
-		$response = $this->createResponseBuilder()
+		$view = View::create()
 			->setData(array('form' => $form->createView()))
 			->setFormat($request->getRequestFormat('html'))
 			->setSerializationContext(SerializationContext::create()->setGroups('context'))
 			->setTemplate('RhapsodyForumBundle:Forum:new.html.twig');
-		return $response;
+		return $this->createResponseBuilder($view);
 	}
 
 	/**
@@ -106,12 +106,12 @@ class ForumDelegate extends Delegate
 		$form = $formFactory->createForm();
 		$form->setData($forum);
 
-		$response = $this->createResponseBuilder()
+		$view = View::create()
 			->setData(array('form' => $form->createView()))
 			->setFormat($request->getRequestFormat('html'))
 			->setSerializationContext(SerializationContext::create()->setGroups('context'))
 			->setTemplate('RhapsodyForumBundle:Forum:new.html.twig');
-		return $response;
+		return $this->createResponseBuilder($view)
 	}
 
 	public function searchAction(Request $request)
