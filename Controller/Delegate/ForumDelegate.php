@@ -111,7 +111,7 @@ class ForumDelegate extends Delegate
 			->setFormat($request->getRequestFormat('html'))
 			->setSerializationContext(SerializationContext::create()->setGroups('context'))
 			->setTemplate('RhapsodyForumBundle:Forum:new.html.twig');
-		return $this->createResponseBuilder($view)
+		return $this->createResponseBuilder($view);
 	}
 
 	public function searchAction(Request $request)
