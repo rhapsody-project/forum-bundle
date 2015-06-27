@@ -143,7 +143,7 @@ class TopicDelegate extends Delegate
 		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
 
 		$page = $request->query->get('page', 1);
-		$topics = $topicManager->findAll();
+		$topics = $topicManager->findAll($forum);
 
 		$pagination = $paginator->paginate($topics, $page, $this->container->getParameter('rhapsody_forum.pagination.topics_per_page'));
 

@@ -27,6 +27,8 @@
  */
 namespace Rhapsody\ForumBundle\Repository;
 
+use Rhapsody\ForumBundle\Model\ForumInterface;
+
 /**
  *
  * @author    Sean W. Quinn
@@ -73,20 +75,22 @@ interface TopicRepositoryInterface
 	function findOneById($id);
 
 	/**
-	 * Finds all topics ordered by their last pull date
+	 * Finds all topics ordered by their last posting date within a given
+	 * <tt>$forum</tt>.
 	 *
 	 * @return array
 	 */
-	function findAllTopics();
+	function findAllByForum(ForumInterface $forum);
 
 	/**
-	 * Finds all topics matching to the specified Category ordered by their
-	 * last pull date
+	 * Finds all topics matching to the specified <tt>$category</tt> within the
+	 * given <tt>$forum</tt> ordered by their last posting date.
 	 *
-	 * @param integer|Category $category
-	 * @return array|Paginator
+	 * @param ForumInterface $forum
+	 * @param Category $category
+	 * @return array
 	 */
-	function findAllByCategory($category);
+	function findAllByForumAndCategory(ForumInterface $forum, $category);
 
 	/**
 	 * Get topics which have the more recent last post
@@ -94,7 +98,7 @@ interface TopicRepositoryInterface
 	 * @param int $number
 	 * @return array of Topics
 	 */
-	function findLatestPosted($number);
+	function findLatestPosted(ForumInterface $forum, $number);
 
 	/**
 	 * Finds all topics matching the specified query ordered by their
@@ -113,10 +117,4 @@ interface TopicRepositoryInterface
 	 */
 	function incrementTopicNumViews($topic);
 
-	/**
-	 * Creates a new post instance
-	 *
-	 * @return Topic
-	 */
-	function createNewTopic();
 }

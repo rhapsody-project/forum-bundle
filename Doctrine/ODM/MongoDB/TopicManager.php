@@ -179,18 +179,18 @@ class TopicManager implements TopicManagerInterface
 	 * (non-PHPDoc)
 	 * @see Rhapsody\ForumBundle\Doctrine\TopicManagerInterface::findAll()
 	 */
-	public function findAll()
+	public function findAll(ForumInterface $forum)
 	{
-		return $this->repository->findAllTopics();
+		return $this->repository->findAllByForum($forum);
 	}
 
 	/**
 	 * (non-PHPDoc)
 	 * @see Rhapsody\ForumBundle\Doctrine\TopicManagerInterface::findAll()
 	 */
-	public function findAllByCategory($category)
+	public function findAllByCategory(ForumInterface $forum, $category)
 	{
-		return $this->repository->findAllByCategory($category);
+		return $this->repository->findAllByCategory($forum, $category);
 	}
 
 	/**

@@ -28,6 +28,7 @@
 namespace Rhapsody\ForumBundle\Repository\ODM\MongoDB;
 
 use Doctrine\ODM\MongoDB\DocumentRepository;
+use Rhapsody\ForumBundle\Model\ForumInterface;
 use Rhapsody\ForumBundle\Repository\TopicRepositoryInterface;
 
 /**
@@ -81,10 +82,12 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 	 * (non-PHPDoc)
 	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::findAll()
 	 */
-	public function findAllTopics()
+	public function findAllByForum(ForumInterface $forum)
 	{
-		$qb = $this->createQueryBuilder()->sort('pulledAt', 'DESC');
-    $query = $qb->getQuery();
+		$qb = $this->createQueryBuilder()
+			->field('forum.$id')->equals(new \MongoId($forum->getId())
+			->sort('lastUpdated', 'DESC');
+		$query = $qb->getQuery();
 
 		return array_values($query->execute()->toArray());
 	}
@@ -93,12 +96,13 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 	 * (non-PHPDoc)
 	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::findAllByCategory()
 	 */
-	public function findAllByCategory($category)
+	public function findAllByForumAndCategory(ForumInterface $forum, $category)
 	{
 		$qb = $this->createQueryBuilder('t')
-				->field('category.$id')->equals(new \MongoId($category->getId()))
-				->sort('pulledAt', 'DESC');
-    $query = $qb->getQuery();
+			->field('forum.$id')->equals(new \MongoId($forum->getId()))
+			->field('category.$id')->equals(new \MongoId($category->getId()))
+			->sort('lastUpdated', 'DESC');
+		$query = $qb->getQuery();
 		return array_values($query->execute()->toArray());
 	}
 
@@ -106,9 +110,12 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 	 * (non-PHPDoc)
 	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::findLatestPosted()
 	 */
-	public function findLatestPosted($number)
+	public function findLatestPosted(ForumInterface $forum, $number)
 	{
-		$qb = $this->createQueryBuilder()->sort('pulledAt', 'DESC')->limit($number);
+		$qb = $this->createQueryBuilder()
+			->field('forum.$id')->equals(new \MongoId($forum->getId())
+			->sort('lastUpdated', 'DESC')
+			->limit($number);
 		$query = $qb->getQuery();
 		return array_values($query->execute()->toArray());
 	}
@@ -122,7 +129,7 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 		$regexp = new \MongoRegex('/' . $query . '/i');
 		$qb = $this->createQueryBuilder()
 				->field('subject')->equals($regexp)
-				->sort('pulledAt', 'DESC');
+				->sort('lastUpdated', 'DESC');
 		$query = $qb->getQuery();
 		return array_values($query->execute()->toArray());
 	}
@@ -137,15 +144,5 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 				->getDocumentCollection($this->getDocumentName())
 				->getMongoCollection()
 				->update(array('_id' => new \MongoId($topic->getId())), array('$inc' => array('numViews' => 1)));
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::incrementTopicNumViews()
-	 */
-	public function createNewTopic()
-	{
-		$class = $this->getObjectClass();
-		return new $class();
 	}
 }
