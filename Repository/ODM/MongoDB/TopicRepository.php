@@ -85,7 +85,7 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 	public function findAllByForum(ForumInterface $forum)
 	{
 		$qb = $this->createQueryBuilder()
-			->field('forum.$id')->equals(new \MongoId($forum->getId())
+			->field('forum.$id')->equals(new \MongoId($forum->getId()))
 			->sort('lastUpdated', 'DESC');
 		$query = $qb->getQuery();
 
@@ -113,7 +113,7 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 	public function findLatestPosted(ForumInterface $forum, $number)
 	{
 		$qb = $this->createQueryBuilder()
-			->field('forum.$id')->equals(new \MongoId($forum->getId())
+			->field('forum.$id')->equals(new \MongoId($forum->getId()))
 			->sort('lastUpdated', 'DESC')
 			->limit($number);
 		$query = $qb->getQuery();
