@@ -42,7 +42,7 @@ use Rhapsody\ForumBundle\Model\TopicInterface;
 class Validator extends AbstractValidator
 {
 
-  protected function isSupported($object);
+  protected function isSupported($object)
   {
     $supported = $this->supports();
     foreach ($supported as $class) {
@@ -50,8 +50,7 @@ class Validator extends AbstractValidator
         return true;
       }
     }
-    throw new \InvalidArgumentException(sprintf('Unable to validate: %s. The validator: %s only supports validating classes which are subclasses of: [%s]'),
-        get_class($object), get_class($this), implode(', ', $supported));
+    throw new \InvalidArgumentException(sprintf('Unable to validate: %s. The validator: %s only supports validating classes which are subclasses of: [%s]'), get_class($object), get_class($this), implode(', ', $supported));
   }
 
   /**

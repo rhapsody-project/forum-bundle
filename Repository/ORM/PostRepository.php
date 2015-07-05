@@ -28,6 +28,7 @@
 namespace Rhapsody\ForumBundle\Repository\ORM;
 
 use Doctrine\ORM\EntityRepository;
+use Rhapsody\ForumBundle\Repository\PostRepositoryInterface;
 
 /**
  *
@@ -39,7 +40,7 @@ use Doctrine\ORM\EntityRepository;
  * @version   $Id$
  * @since     1.0
  */
-class PostRepository extends EntityRepository  PostRepositoryInterface
+class PostRepository extends EntityRepository implements PostRepositoryInterface
 {
 
   /**
