@@ -1,0 +1,55 @@
+{% block subject %}
+	{% autoescape false %}
+	{{ 'rhapsody.forum.topic.reply.email_message.subject'|trans({'%topic%': topic.title}, 'RhapsodyForumBundle') }}
+	{% endautoescape %}
+{% endblock %}
+
+{% block body_text %}
+	{% autoescape false %}
+	{{
+		'rhapsody.forum.topic.reply.email_message.body'|trans({
+			'%topic%': topic.title,
+			'%author%': author.username,
+			'%username%': user.username,
+			'%post_text%': post.text,
+			'%topic_url%': url
+		}, 'RhapsodyForumBundle')
+	}}
+	{% endautoescape %}
+{% endblock %}
+
+{% block body_html %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" name="viewport">
+<title></title>
+<style data-premailer="ignore">
+</style>
+</head>
+<body>
+	<p>
+		<strong>{{ user.username }}</strong>, a reply was posted to:
+	</p>
+	<h1 style="text-align: center; color: #213217;">
+		<a href="{{ url }}" style="text-decoration: none; color: #0b1902;">{{ topic.title }}</a>
+	</h1>
+	<table style="border-collapse: collapse; border: 0px solid #fff; width: 50%; margin-left: auto; margin-right: auto;">
+		<tr>
+			<td>
+				<span><strong>{{ author.username }}</strong> wrote:</span>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span>{{ post.text|markdown }}</span>
+			</td>
+		</tr>
+		<tr>
+			<td>To view this post: {{ url }}</td>
+		</tr>
+	</table>
+</body>
+</html>
+{% endblock %}

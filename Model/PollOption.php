@@ -29,7 +29,7 @@ namespace Rhapsody\ForumBundle\Model;
 
 /**
  *
- * @author 	  Sean W. Quinn
+ * @author    Sean W. Quinn
  * @category  Rhapsody ForumBundle
  * @package   Rhapsody\ForumBundle\Model
  * @copyright Copyright (c) 2013 Rhapsody Project

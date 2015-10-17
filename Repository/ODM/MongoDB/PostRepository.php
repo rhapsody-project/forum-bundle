@@ -94,6 +94,18 @@ class PostRepository extends DocumentRepository implements PostRepositoryInterfa
 
 	/**
 	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findAllByTopic()
+	 */
+	public function getPostCountByTopic($topic)
+	{
+		$qb = $this->createQueryBuilder()
+			->field('topic.$id')->equals(new \MongoId($topic->getId()));
+		$query = $qb->getQuery();
+		return $query->count();
+	}
+
+	/**
+	 * (non-PHPDoc)
 	 * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::search()
 	 */
 	public function search($query)

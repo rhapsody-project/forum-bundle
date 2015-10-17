@@ -25,26 +25,37 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-namespace Rhapsody\ForumBundle\Doctrine;
-
-use Rhapsody\ForumBundle\Model\TopicInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+namespace Rhapsody\ForumBundle\Mailer;
 
 /**
  *
  * @author    Sean W. Quinn
  * @category  Rhapsody ForumBundle
- * @package   Rhapsody\ForumBundle\Doctrine
+ * @package   Rhapsody\ForumBundle\Mailer
  * @copyright Copyright (c) 2013 Rhapsody Project
  * @license   http://opensource.org/licenses/MIT
  * @version   $Id$
  * @since     1.0
  */
-interface TopicManagerInterface
+class EmailTemplate extends MessageTemplate
 {
+	private $textBody;
 
-	function markTopicAsViewed(TopicInterface $topic, UserInterface $user);
+	/**
+	 *
+	 * @return unknown
+	 */
+	public function getTextBody()
+	{
+		return $this->textBody;
+	}
 
-	function update(TopicInterface $forum, $andFlush = true);
-
+	/**
+	 *
+	 * @param unknown $text
+	 */
+	public function setTextBody($text)
+	{
+		$this->textBody = $text;
+	}
 }

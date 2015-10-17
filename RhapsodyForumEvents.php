@@ -39,13 +39,34 @@ namespace Rhapsody\ForumBundle;
  */
 class RhapsodyForumEvents
 {
-  /**
-   * The VIEW_TOPIC event occurs when a user views a topic.
-   *
-   * This event allows the forum bundle to update statistics on the topic being
-   * viewed.
-   *
-   * The event listener method receives a \Rhapsody\ForumBundle\Event\TopicEvent instance.
-   */
-  const VIEW_TOPIC = 'rhapsody.forum.event.topic.view';
+
+	/**
+	 * The NEW_TOPIC event occurs when a user creates a new topic.
+	 *
+	 * This event allows the forum bundle to alert individuals watching a forum
+	 * or category of new posts.
+	 *
+	 * The event listener method receives a \Rhapsody\ForumBundle\Event\TopicEvent instance.
+	 */
+	const NEW_TOPIC = 'rhapsody.forum.event.topic.new';
+
+	/**
+	 * The REPLY_TO_TOPIC event occurs when a user posts a reply to a topic.
+	 *
+	 * This event allows the forum bundle to notify participants of a topic
+	 * discussion that a new post has been added.
+	 *
+	 * The event listener method receives a \Rhapsody\ForumBundle\Event\TopicEvent instance.
+	 */
+	const REPLY_TO_TOPIC = 'rhapsody.forum.event.topic.reply';
+
+	/**
+	 * The VIEW_TOPIC event occurs when a user views a topic.
+	 *
+	 * This event allows the forum bundle to update statistics on the topic being
+	 * viewed.
+	 *
+	 * The event listener method receives a \Rhapsody\ForumBundle\Event\TopicEvent instance.
+	 */
+	const VIEW_TOPIC = 'rhapsody.forum.event.topic.view';
 }

@@ -27,17 +27,18 @@
  */
 namespace Rhapsody\ForumBundle\Controller\Delegate;
 
-use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\RouteRedirectView;
+use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
+use Rhapsody\ForumBundle\Event\TopicEventBuilder;
 use Rhapsody\ForumBundle\Model\ForumInterface;
 use Rhapsody\ForumBundle\Model\PostInterface;
 use Rhapsody\ForumBundle\Model\TopicInterface;
+use Rhapsody\ForumBundle\RhapsodyForumEvents;
 use Rhapsody\RestBundle\HttpFoundation\Controller\Delegate;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 
 /**
  *
@@ -94,6 +95,20 @@ class PostDelegate extends Delegate
 		$topic->setLastUpdated($post->getCreated());
 		$topic->setLastPost($data);
 		$topicManager->update($topic);
+
+		try {
+			$topicEventBuilder = TopicEventBuilder::create()
+				->setTopic($topic)
+				->setPost($post)
+				->setUser($post->author);
+			$event = $topicEventBuilder->build();
+
+			$eventDispatcher = $this->container->get('event_dispatcher');
+			$eventDispatcher->dispatch(RhapsodyForumEvents::REPLY_TO_TOPIC, $event);
+		}
+		catch (\Exception $ex) {
+			throw $ex;
+		}
 
 		$this->container->get('session')->getFlashBag()->add('success', 'rhapsody.forum.post.created');
 		$view = RouteRedirectView::create('rhapsody_forum_topic_view', array('topic' => $topic->id, 'post' => $post->id))

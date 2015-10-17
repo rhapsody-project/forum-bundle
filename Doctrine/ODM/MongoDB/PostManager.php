@@ -184,6 +184,11 @@ class PostManager implements PostManagerInterface
 		return !$map ? array_values($map) : $map;
 	}
 
+	public function getPostCountByTopic($topic)
+	{
+		return $this->repository->getPostCountByTopic($topic);
+	}
+
 	/**
 	 *
 	 */

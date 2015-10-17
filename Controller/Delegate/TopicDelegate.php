@@ -28,21 +28,17 @@
  */
 namespace Rhapsody\ForumBundle\Controller\Delegate;
 
-use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\RouteRedirectView;
+use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
 use Rhapsody\ComponentExtensionBundle\Exception\FormExceptionFactory;
-use Rhapsody\ForumBundle\Event\TopicEvent;
-use Rhapsody\ForumBundle\Form\Type\TopicForm;
-use Rhapsody\ForumBundle\Model\CategoryInterface;
 use Rhapsody\ForumBundle\Model\ForumInterface;
 use Rhapsody\ForumBundle\Model\TopicInterface;
 use Rhapsody\ForumBundle\RhapsodyForumEvents;
 use Rhapsody\RestBundle\HttpFoundation\Controller\Delegate;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Rhapsody\ForumBundle\Event\TopicEventBuilder;
 
 /**
  *
@@ -235,7 +231,18 @@ class TopicDelegate extends Delegate
 			$_posts = $postManager->findAllByTopic($_topic);
 
 			// ** Trigger the view of the topic, to update statistics, etc.
-			$eventDispatcher->dispatch(RhapsodyForumEvents::VIEW_TOPIC, new TopicEvent($_topic));
+			try {
+				$topicEventBuilder = TopicEventBuilder::create()
+					->setTopic($_topic)
+					->setUser($this->getUser());
+				$event = $topicEventBuilder->build();
+
+				$eventDispatcher = $this->container->get('event_dispatcher');
+				$eventDispatcher->dispatch(RhapsodyForumEvents::VIEW_TOPIC, $event);
+			}
+			catch (\Exception $ex) {
+				throw $ex;
+			}
 
 			// ** Paginate the posts, we don't want to return too many.
 			$paginatedPosts = $paginator->paginate($_posts, $page, $this->container->getParameter('rhapsody_forum.pagination.posts_per_page'));

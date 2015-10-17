@@ -27,8 +27,10 @@
  */
 namespace Rhapsody\ForumBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
 use Rhapsody\ForumBundle\Model\TopicInterface;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Rhapsody\ForumBundle\Model\PostInterface;
 
 /**
  *
@@ -43,21 +45,52 @@ use Rhapsody\ForumBundle\Model\TopicInterface;
 class TopicEvent extends Event implements TopicEventInterface
 {
 
-  private $topic;
+	/**
+	 * The topic.
+	 * @var \Rhapsody\ForumBundle\Model\TopicInterface
+	 */
+	private $topic;
 
-  public function __construct(TopicInterface $topic)
-  {
-    $this->topic = $topic;
-  }
+	/**
+	 * The post.
+	 * @var \Rhapsody\ForumBundle\Model\PostInterface
+	 */
+	private $post;
 
-  public function getTopic()
-  {
-    return $this->topic;
-  }
+	private $user;
 
-  public function setTopic(TopicInterface $topic)
-  {
-    $this->topic = $topic;
-  }
+	public function __construct()
+	{
+		// Empty
+	}
 
+	public function getPost()
+	{
+		return $this->post;
+	}
+
+	public function getTopic()
+	{
+		return $this->topic;
+	}
+
+	public function getUser()
+	{
+		return $this->user;
+	}
+
+	public function setPost(PostInterface $post)
+	{
+		$this->post = $post;
+	}
+
+	public function setTopic(TopicInterface $topic)
+	{
+		$this->topic = $topic;
+	}
+
+	public function setUser(UserInterface $user)
+	{
+		$this->user = $user;
+	}
 }

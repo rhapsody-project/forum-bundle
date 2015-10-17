@@ -53,6 +53,7 @@ class RhapsodyForumExtension extends Extension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('delegate.xml');
+        $loader->load('events.xml');
         $loader->load('factory.xml');
         $loader->load('form.xml');
         $loader->load('twig.xml');

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <!-- Parameters -->
+    <parameters>
+        <parameter key="rhapsody.forum.event_listener.topic_subscriber.class">Rhapsody\ForumBundle\EventListener\TopicSubscriber</parameter>
+    </parameters>
+
+    <services>
+
+        <service id="rhapsody.forum.event_listener.topic_subscriber" class="%rhapsody.forum.event_listener.topic_subscriber.class%">
+        	<tag name="kernel.event_subscriber" />
+            <argument type="service" id="rhapsody.forum.mailer.twig_swift_mailer" />
+            <argument type="service" id="router" />
+            <argument type="service" id="session" />
+            <argument type="service" id="rhapsody.forum.doctrine.topic_manager" />
+        </service>
+
+    </services>
+
+</container>

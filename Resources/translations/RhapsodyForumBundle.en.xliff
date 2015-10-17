@@ -30,6 +30,27 @@
         <source>rhapsody.forum.topic.created</source>
         <target>Topic successfully created!</target>
       </trans-unit>
+      <trans-unit id="rhapsody.forum.topic.reply.email_message.body">
+        <source>rhapsody.forum.topic.reply.email_message.body</source>
+        <target>
+<![CDATA[
+%topic%
+
+%author% wrote:
+
+%post_text%
+
+-----------------------
+
+View the action in this scene:
+%topic_url%
+]]>
+        </target>
+      </trans-unit>
+      <trans-unit id="rhapsody.forum.topic.reply.email_message.subject">
+        <source>rhapsody.forum.topic.reply.email_message.subject</source>
+        <target>New message in %topic%</target>
+      </trans-unit>
       <trans-unit id="rhapsody.forum.post.created">
         <source>rhapsody.forum.post.created</source>
         <target>Successfully replied!</target>

@@ -1,5 +1,5 @@
 <?php
-/* Copyright (c) 2013 Rhapsody Project
+/* Copyright (c) 2015 Rhapsody Project
  *
  * Licensed under the MIT License (http://opensource.org/licenses/MIT)
  *
@@ -25,26 +25,84 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-namespace Rhapsody\ForumBundle\Doctrine;
+namespace Rhapsody\ForumBundle\Event;
 
+use Rhapsody\ForumBundle\Model\PostInterface;
 use Rhapsody\ForumBundle\Model\TopicInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * An {@link \Rhapsody\ForumBundle\Event\TopicEventInterface} builder.
  *
- * @author    Sean W. Quinn
+ * @author    Sean.Quinn
  * @category  Rhapsody ForumBundle
- * @package   Rhapsody\ForumBundle\Doctrine
- * @copyright Copyright (c) 2013 Rhapsody Project
+ * @package   Rhapsody\ForumBundle\Event
+ * @copyright Copyright (c) 2015 Rhapsody Project
  * @license   http://opensource.org/licenses/MIT
  * @version   $Id$
  * @since     1.0
  */
-interface TopicManagerInterface
+class TopicEventBuilder
 {
 
-	function markTopicAsViewed(TopicInterface $topic, UserInterface $user);
+	/**
+	 * The topic.
+	 * @var \Rhapsody\ForumBundle\Model\TopicInterface
+	 */
+	private $action;
 
-	function update(TopicInterface $forum, $andFlush = true);
+	/**
+	 * The post.
+	 * @var \Rhapsody\ForumBundle\Model\PostInterface
+	 */
+	private $post;
 
+	/**
+	 * The user.
+	 * @var \Symfony\Component\Security\Core\User\UserInterface
+	 */
+	private $user;
+
+	public static function create()
+	{
+		return new TopicEventBuilder();
+	}
+
+	public function build()
+	{
+		$topicEvent = new TopicEvent();
+
+		if ($this->topic === null) {
+			throw new \NullPointerException("Topic cannot be null for topic event(s).");
+		}
+
+		$topicEvent->setTopic($this->topic);
+
+		if ($this->post !== null) {
+			$topicEvent->setPost($this->post);
+		}
+
+		if ($this->user !== null) {
+			$topicEvent->setUser($this->user);
+		}
+		return $topicEvent;
+	}
+
+	public function setTopic(TopicInterface $topic)
+	{
+		$this->topic = $topic;
+		return $this;
+	}
+
+	public function setPost(PostInterface $post)
+	{
+		$this->post = $post;
+		return $this;
+	}
+
+	public function setUser(UserInterface $user)
+	{
+		$this->user = $user;
+		return $this;
+	}
 }

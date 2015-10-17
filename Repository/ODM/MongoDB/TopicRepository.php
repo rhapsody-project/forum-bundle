@@ -140,9 +140,43 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 	 */
 	public function incrementTopicNumViews($topic)
 	{
+		$filter = array('_id' => new \MongoId($topic->getId()));
+		$expr = array(
+			'$inc' => array('viewCount' => 1)
+		);
+
+		// ** Perform increment update statement against the tuple.
 		$this->getDocumentManager()
 				->getDocumentCollection($this->getDocumentName())
 				->getMongoCollection()
-				->update(array('_id' => new \MongoId($topic->getId())), array('$inc' => array('numViews' => 1)));
+				->update($filter, $expr);
 	}
+
+ 	public function updatePostCount($topic, $posts)
+ 	{
+// 		$filter = array('_id' => new \MongoId($topic->getId()));
+// 		$expr = array(
+// 			'$set' => array('postCount' => $posts)
+// 		);
+//
+// 		// ** Perform increment update statement against the tuple.
+// 		$this->getDocumentManager()
+// 				->getDocumentCollection($this->getDocumentName())
+// 				->getMongoCollection()
+// 				->update($filter, $expr);
+ 	}
+
+ 	public function updateReplyCount($topic, $replies)
+ 	{
+// 		$filter = array('_id' => new \MongoId($topic->getId()));
+// 		$expr = array(
+// 			'$set' => array('replyCount' => $posts)
+// 		);
+//
+// 		// ** Perform increment update statement against the tuple.
+// 		$this->getDocumentManager()
+// 				->getDocumentCollection($this->getDocumentName())
+// 				->getMongoCollection()
+// 				->update($filter, $expr);
+ 	}
 }

@@ -117,4 +117,8 @@ interface TopicRepositoryInterface
 	 */
 	function incrementTopicNumViews($topic);
 
+	function updatePostCount($topic, $posts);
+
+	function updateReplyCount($topic, $replies);
+
 }

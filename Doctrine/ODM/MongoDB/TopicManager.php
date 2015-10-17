@@ -37,6 +37,7 @@ use Rhapsody\ForumBundle\Model\ForumInterface;
 use Rhapsody\ForumBundle\Model\PostInterface;
 use Rhapsody\ForumBundle\Model\TopicInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  *
@@ -194,6 +195,36 @@ class TopicManager implements TopicManagerInterface
 	}
 
 	/**
+	 * Returns an array of users who have commented on this action.
+	 *
+	 * @return array an array of users who have commented on this action.
+	 */
+	public function findUsersByTopic($topic)
+	{
+		$users = array();
+		$posts = $this->postManager->findAllByTopic($topic);
+
+		// ** Add the rest of the commentors...
+		foreach ($posts as $post) {
+			try {
+				$key = $post->author->getId();
+				if (!array_key_exists($key, $users)) {
+					$users[$key] = $post->author;
+				}
+			}
+			finally {
+				// Do nothing
+			}
+		}
+		return array_values($users);
+	}
+
+	public function markTopicAsViewed(TopicInterface $topic, UserInterface $user)
+	{
+		$this->repository->incrementTopicNumViews($topic);
+	}
+
+	/**
 	 *
 	 */
 	public function remove(TopicInterface $topic, $andFlush = true)
@@ -231,6 +262,19 @@ class TopicManager implements TopicManagerInterface
 		if ($andFlush) {
 			$this->objectManager->flush();
 		}
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see Rhapsody\ForumBundle\Doctrine\TopicManagerInterface::update()
+	 */
+	public function updateCounts(TopicInterface $topic)
+	{
+		$posts = $this->postManager->getPostCountByTopic($topic);
+
+		$topic->setPostCount($posts);
+		$topic->setReplyCount($posts - 1);
+		$this->update($topic);
 	}
 
 }

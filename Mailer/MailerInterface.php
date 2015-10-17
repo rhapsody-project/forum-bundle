@@ -1,5 +1,5 @@
 <?php
-/* Copyright (c) 2013 Rhapsody Project
+/* Copyright (c) 2015 Rhapsody Project
  *
  * Licensed under the MIT License (http://opensource.org/licenses/MIT)
  *
@@ -25,26 +25,25 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-namespace Rhapsody\ForumBundle\Doctrine;
-
-use Rhapsody\ForumBundle\Model\TopicInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+namespace Rhapsody\ForumBundle\Mailer;
 
 /**
  *
  * @author    Sean W. Quinn
  * @category  Rhapsody ForumBundle
- * @package   Rhapsody\ForumBundle\Doctrine
+ * @package   Rhapsody\ForumBundle\Mailer
  * @copyright Copyright (c) 2013 Rhapsody Project
  * @license   http://opensource.org/licenses/MIT
  * @version   $Id$
  * @since     1.0
  */
-interface TopicManagerInterface
+interface MailerInterface
 {
 
-	function markTopicAsViewed(TopicInterface $topic, UserInterface $user);
-
-	function update(TopicInterface $forum, $andFlush = true);
-
+	/**
+	 *
+	 * @param MessageTemplate $template
+	 * @param array $data
+	 */
+	function sendMessage($template, array $data = array());
 }

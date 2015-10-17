@@ -27,6 +27,7 @@
  */
 namespace Rhapsody\ForumBundle\Event;
 
+use Rhapsody\BlogBundle\Model\PostInterface;
 /**
  *
  * @author    Sean W. Quinn
@@ -40,5 +41,17 @@ namespace Rhapsody\ForumBundle\Event;
 interface TopicEventInterface
 {
 
+	/**
+	 * Returns the topic associated with the event.
+	 *
+	 * @return \Rhapsody\ForumBundle\Model\TopicInterface
+	 */
+	function getTopic();
 
+	/**
+	 * Returns the post associated with the event.
+	 *
+	 * @return \Rhapsody\ForumBundle\Model\PostInterface
+	 */
+	function getPost();
 }

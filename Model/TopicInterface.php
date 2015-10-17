@@ -72,6 +72,13 @@ interface TopicInterface
 	function getType();
 
 	/**
+	 * Returns the number of times the topic has been viewed.
+	 *
+	 * @return in the number of times the topic has been viewed.
+	 */
+	function getViewCount();
+
+	/**
 	 * (non-PHPDoc)
 	 * @see \Rhapsody\ForumBundle\Model\TopicInterface::isLocked()
 	 */
