@@ -25,27 +25,44 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-namespace Rhapsody\ForumBundle\Text;
+namespace Rhapsody\ForumBundle\EventListener;
+
+use Rhapsody\ForumBundle\RhapsodyForumEvents;
+use Rhapsody\SocialBundle\Doctrine\PostManagerInterface;
+use Rhapsody\SocialBundle\EventListener\PostSubscriber as BasePostSubscriber;
+use Rhapsody\SocialBundle\Factory\TemplateFactoryInterface;
+use Rhapsody\SocialBundle\Mailer\MailerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  *
- * @author    Sean W. Quinn
- * @category  Rhapsody ForumBundle
- * @package   Rhapsody\ForumBundle\Text
+ * @author    Sean.Quinn
+ * @category  Rhapsody SocialBundle
+ * @package   Rhapsody\SocialBundle\EventListener
  * @copyright Copyright (c) 2013 Rhapsody Project
  * @license   http://opensource.org/licenses/MIT
  * @version   $Id$
  * @since     1.0
  */
-interface FormatterInterface
+class PostSubscriber extends BasePostSubscriber
 {
 
 	/**
-	 * Formats the text.
 	 *
-	 * @param string $text the text to format.
-	 * @return string the formatted text.
+	 * @param MailerInterface $mailer
+	 * @param UrlGeneratorInterface $router
+	 * @param SessionInterface $session
 	 */
-	function format($text);
+	public function __construct(MailerInterface $mailer, UrlGeneratorInterface $router, SessionInterface $session, PostManagerInterface $postManager, TemplateFactoryInterface $templateFactory)
+	{
+		parent::__construct($mailer, $router, $session, $postManager, $templateFactory);
+	}
 
+	public static function getSubscribedEvents()
+	{
+		return array(
+			RhapsodyForumEvents::POST_EDITED => array('onPostEdited', 0),
+		);
+	}
 }

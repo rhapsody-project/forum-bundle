@@ -1,5 +1,5 @@
 <?php
-/* Copyright (c) 2013 Rhapsody Project
+/* Copyright (c) 2015 Rhapsody Project
  *
  * Licensed under the MIT License (http://opensource.org/licenses/MIT)
  *
@@ -27,13 +27,13 @@
  */
 namespace Rhapsody\ForumBundle\Builder;
 
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  *
  * @author    Sean W. Quinn
- * @category  Rhapsody ForumBundle
- * @package   Rhapsody\ForumBundle\Builder
+ * @category  Rhapsody SocialBundle
+ * @package   Rhapsody\SocialBundle\Builder
  * @copyright Copyright (c) 2013 Rhapsody Project
  * @license   http://opensource.org/licenses/MIT
  * @version   $Id$
@@ -57,11 +57,11 @@ class ForumBuilder
   protected $object;
 
   /**
-   * The class to be instantiated by the builder.
-   * @var SecurityContextInterface
+   * The authorization checker class to be instantiated by the builder.
+   * @var AuthorizationCheckerInterface
    * @access protected
    */
-  protected $securityContext;
+  protected $authorizationChecker;
 
   /**
    * The validator
@@ -74,10 +74,10 @@ class ForumBuilder
   /**
    *
    */
-  public function __construct(SecurityContextInterface $securityContext, $validator, $class)
+  public function __construct(AuthorizationCheckerInterface $authorizationChecker, $validator, $class)
   {
     $this->class = $class;
-    $this->securityContext = $securityContext;
+    $this->authorizationChecker = $authorizationChecker;
     $this->validator = $validator;
 
     $this->object = new $class();

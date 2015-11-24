@@ -29,9 +29,9 @@ namespace Rhapsody\ForumBundle\Doctrine\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Monolog\Logger;
-use Rhapsody\ForumBundle\Doctrine\CategoryManagerInterface;
-use Rhapsody\ForumBundle\Factory\BuilderFactoryInterface;
-use Rhapsody\ForumBundle\Model\CategoryInterface;
+use Rhapsody\SocialBundle\Doctrine\CategoryManager as BaseCategoryManager;
+use Rhapsody\SocialBundle\Factory\BuilderFactoryInterface;
+use Rhapsody\SocialBundle\Model\CategoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -44,34 +44,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @version   $Id$
  * @since     1.0
  */
-class CategoryManager implements CategoryManagerInterface
+class CategoryManager extends BaseCategoryModel
 {
 
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\CategoryManagerInterface::updateForum()
-	 */
-	public function updateForum(ForumInterface $forum, $andFlush = true)
+	public function __construct(ObjectManager $objectManager, EventDispatcherInterface $eventDispatcher, BuilderFactoryInterface $builderFactory, $class)
 	{
 
 	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\ForumManagerInterface::updatePost()
-	 */
-	public function updatePost(PostInterface $post, $andFlush = true)
-	{
-
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\ForumManagerInterface::updateTopic()
-	 */
-	public function updateTopic(TopicInterface $topic, $andFlush = true)
-	{
-
-	}
-
 }

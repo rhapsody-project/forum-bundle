@@ -29,13 +29,11 @@ namespace Rhapsody\ForumBundle\Controller\Delegate;
 
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Rhapsody\ForumBundle\Form\Type\SearchType;
 use Rhapsody\ForumBundle\Model\Search;
 use Rhapsody\RestBundle\HttpFoundation\Controller\Delegate;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  *

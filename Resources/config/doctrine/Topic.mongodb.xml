@@ -22,7 +22,7 @@
         <field name="type" fieldName="type" type="string" />
         <field name="viewCount" fieldName="viewCount" type="int" />
         <reference-one field="category" />
-        <reference-one field="forum" />
+        <reference-one field="socialContext" />
         <reference-one field="post">
             <cascade>
                 <all />
@@ -46,13 +46,13 @@
                 <option name="dropDups" value="false" />
             </index>
             <index name="category_id_asc">
-                <key name="forum.$id" order="asc" />
+                <key name="socialContext.$id" order="asc" />
                 <option name="safe" value="true" />
                 <option name="unique" value="false" />
                 <option name="dropDups" value="false" />
             </index>
             <index name="forum_id_asc">
-                <key name="forum.$id" order="asc" />
+                <key name="socialContext.$id" order="asc" />
                 <option name="safe" value="true" />
                 <option name="unique" value="false" />
                 <option name="dropDups" value="false" />

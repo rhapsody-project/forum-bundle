@@ -27,7 +27,7 @@
  */
 namespace Rhapsody\ForumBundle\Model;
 
-use Rhapsody\Commons\Web\SlugInflector;
+use Rhapsody\SocialBundle\Model\Category as BaseCategory;
 
 /**
  *
@@ -39,259 +39,29 @@ use Rhapsody\Commons\Web\SlugInflector;
  * @version   $Id$
  * @since     1.0
  */
-class Category implements CategoryInterface
+class Category extends BaseCategory implements ForumAwareInterface
 {
 
-	/**
-	 * The identifier for the category.
-	 * @var mixed
-	 * @access protected
-	 */
-	protected $id;
-
-	/**
-	 * The date that the category was created.
-	 * @var \DateTime
-	 * @access protected
-	 */
-	protected $created;
-
-	/**
-	 * The description of the category.
-	 * @var string
-	 * @access protected
-	 */
-	protected $description;
-
-	/**
-	 * When the category was last indexed; when a forum is indexed statistical
-	 * data such as number of posts and number of topics is updated.
-	 * @var \DateTime
-	 * @access protected
-	 */
-	protected $lastIndexed;
-
-	/**
-	 * The name of the forum.
-	 * @var string
-	 * @access protected
-	 */
-	protected $name;
-
-	/**
-	 * The display order of the category, with relation to its siblings. A
-	 * category with a lower order value will display before categories with
-	 * higher order values.
-	 * @var int
-	 * @access protected
-	 */
-	protected $order;
-
-	/**
-	 * The privacy flag for the category.
-	 * @var string
-	 * @access protected
-	 */
-	protected $privacy = CategoryInterface::CATEGORY_PRIVACY_PUBLIC;
-
-	/**
-	 * The collection of tags that define this category.
-	 * @var array
-	 * @access protected
-	 */
-	protected $tags = array();
-
-	/**
-	 * The collection of topics in this category.
-	 * @var array
-	 * @access protected
-	 */
-	protected $topics = array();
-
-	/**
-	 * Constructor for the forum model.
-	 */
 	public function __construct()
 	{
-		$this->created = new \DateTime;
-		$this->lastIndexed = new \DateTime;
-		$this->tags = array();
-		$this->topics = array();
-	}
-
-	/**
-	 * Generates the slug whether it is empty
-	 */
-	public function generateSlug()
-	{
-		if (empty($this->slug)) {
-			$inflector = SlugInflector::getInstance();
-			$this->slug = $inflector->inflect($this->getName());
-		}
+		parent::__construct();
 	}
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\CategoryInterface::getCreated()
+	 * @see \Rhapsody\ForumBundle\Model\ForumAwareInterface::getForum()
 	 */
-	public function getCreated()
+	public function getForum()
 	{
-		return $this->created;
+		return $this->getSocialContext();
 	}
 
 	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\CategoryInterface::getDescription()
+	 * Sets the forum that this post belongs to.
+	 * @param ForumInterface $forum the forum.
 	 */
-	public function getDescription()
+	public function setForum(ForumInterface $forum)
 	{
-		return $this->description;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\CategoryInterface::getId()
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\CategoryInterface::getLastIndexed()
-	 */
-	public function getLastIndexed()
-	{
-		return $this->lastIndexed;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\CategoryInterface::getName()
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\CategoryInterface::getOrder()
-	 */
-	public function getOrder()
-	{
-		return $this->order;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\CategoryInterface::getPrivacy()
-	 */
-	public function getPrivacy()
-	{
-		return $this->privacy;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\CategoryInterface::getTags()
-	 */
-	public function getTags()
-	{
-		return $this->tags;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\CategoryInterface::getTopics()
-	 */
-	public function getTopics()
-	{
-		return $this->topics;
-	}
-
-	/**
-	 * Sets the creation date of the category.
-	 * @param \DateTime $created the creation date.
-	 */
-	public function setCreated(\DateTime $created)
-	{
-		$this->created = $created;
-	}
-
-	/**
-	 * Sets the description of the category.
-	 * @param string $description the description.
-	 */
-	public function setDescription($description)
-	{
-		$this->description = $description;
-	}
-
-	/**
-	 * Sets the identifier of the category.
-	 * @param mixed $id the identifier.
-	 */
-	public function setId($id)
-	{
-		$this->id = $id;
-	}
-
-	/**
-	 * Sets the last index date of the category.
-	 * @param \DateTime $lastIndexed the last indexed date.
-	 */
-	public function setLastIndexed(\DateTime $lastIndexed)
-	{
-		$this->lastIndexed = $lastIndexed;
-	}
-
-	/**
-	 * Sets the creation date of the category.
-	 * @param \DateTime $created the creation date.
-	 */
-	public function setName($name)
-	{
-		$this->name = $name;
-	}
-
-	/**
-	 * Sets the numerical ordering of the category for sort algorithms. A lower
-	 * value gives higher priority to the category, and therefore displays it
-	 * higher in the list of categories.
-	 *
-	 * @param int $order the order to display the category in.
-	 */
-	public function setOrder($order)
-	{
-		$this->order = $order;
-	}
-
-	/**
-	 * Sets the privacy of the category.
-	 * @param string $privacy the privacy.
-	 */
-	public function setPrivacy($privacy)
-	{
-		$this->privacy = $privacy;
-	}
-
-	/**
-	 * Sets the tags of the category.
-	 * @param array $tags the forum's tags.
-	 */
-	public function setTags($tags)
-	{
-		$this->tags = $tags;
-	}
-
-	/**
-	 * Sets the collection of topics on the category.
-	 * @param array $topics the collection of topics.
-	 */
-	public function setTopics($topics)
-	{
-		$this->topics = $topics;
+		$this->setSocialContext($forum);
 	}
 }

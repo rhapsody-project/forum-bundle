@@ -33,12 +33,12 @@ use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
 use Rhapsody\ComponentExtensionBundle\Exception\FormExceptionFactory;
 use Rhapsody\ForumBundle\Model\ForumInterface;
-use Rhapsody\ForumBundle\Model\TopicInterface;
 use Rhapsody\ForumBundle\RhapsodyForumEvents;
 use Rhapsody\RestBundle\HttpFoundation\Controller\Delegate;
+use Rhapsody\SocialBundle\Event\TopicEventBuilder;
+use Rhapsody\SocialBundle\Model\TopicInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Rhapsody\ForumBundle\Event\TopicEventBuilder;
 
 /**
  *
@@ -53,6 +53,11 @@ use Rhapsody\ForumBundle\Event\TopicEventBuilder;
 class TopicDelegate extends Delegate
 {
 
+	public function __construct()
+	{
+		parent::__construct();
+	}
+
 	/**
 	 * Delegate for rendering the page that allows the user to post a new topic to
 	 * the forum.
@@ -63,7 +68,7 @@ class TopicDelegate extends Delegate
 	 */
 	public function createAction($request, $forum, $category = null)
 	{
-		/** @var $topicManager \Rhapsody\ForumBundle\Doctrine\TopicManagerInterface */
+		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
 		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
 
 		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
@@ -72,7 +77,7 @@ class TopicDelegate extends Delegate
 		/** @var $user \Symfony\Component\Security\Core\User\UserInterface */
 		$user = $this->getUser();
 
-		/** @var $topic \Rhapsody\ForumBundle\Model\TopicInterface */
+		/** @var $topic \Rhapsody\SocialBundle\Model\TopicInterface */
 		$topic = $topicManager->newTopic($forum, $category);
 		$form = $formFactory->createForm();
 		$form->setData($topic);
@@ -89,7 +94,20 @@ class TopicDelegate extends Delegate
 
 		$post = $form->get('post')->getData();
 
-		$topicManager->createTopic($data, $post, $user);
+		$topic = $topicManager->createTopic($data, $post, $user);
+		try {
+			$topicEventBuilder = TopicEventBuilder::create()
+				->setTopic($topic)
+				->setUser($this->getUser());
+			$event = $topicEventBuilder->build();
+
+			$eventDispatcher = $this->container->get('event_dispatcher');
+			$eventDispatcher->dispatch(RhapsodyForumEvents::NEW_TOPIC, $event);
+		}
+		catch (\Exception $ex) {
+			//$this->logger->error("An error occurred while trying ")
+			throw $ex;
+		}
 
 		$this->container->get('session')->getFlashBag()->add('success', 'rhapsody.forum.topic.created');
 		$view = RouteRedirectView::create('rhapsody_forum_topic_view', array('forum' => $forum->getId(), 'category' => $category, 'topic' => $data->getId()))
@@ -105,7 +123,7 @@ class TopicDelegate extends Delegate
 	 */
 	public function deleteAction(Request $request, ForumInterface $forum, $topicId)
 	{
-		/** @var $topicManager \Rhapsody\ForumBundle\Doctrine\TopicManagerInterface */
+		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
 		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
 
 		$topic = $topicManager->findById($topicId);
@@ -132,21 +150,27 @@ class TopicDelegate extends Delegate
 	 */
 	public function listAction(Request $request, ForumInterface $forum)
 	{
-		/** @var $paginator \Knp\Components\Pager\Paginator */
-		$paginator = $this->container->get('knp_paginator');
+		try {
+			/** @var $paginator \Knp\Components\Pager\Paginator */
+			$paginator = $this->container->get('knp_paginator');
 
-		/** @var $topicManager \Rhapsody\ForumBundle\Doctrine\TopicManagerInterface */
-		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
+			/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
+			$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
 
-		$page = $request->query->get('page', 1);
-		$topics = $topicManager->findAll($forum);
+			$page = $request->query->get('page', 1);
+			$topics = $topicManager->findAll($forum);
 
-		$pagination = $paginator->paginate($topics, $page, $this->container->getParameter('rhapsody_forum.pagination.topics_per_page'));
+			$pagination = $paginator->paginate($topics, $page, $this->container->getParameter('rhapsody_forum.pagination.topics_per_page'));
 
-		$view = View::create(array('topics' => $pagination, 'page' => $page))
-			->setFormat($request->getRequestFormat('html'))
-			->setTemplate('RhapsodyForumBundle:Topic:list.html.twig');
-		return $this->createResponseBuilder($view);
+			$view = View::create(array('topics' => $pagination, 'page' => $page))
+				->setFormat($request->getRequestFormat('html'))
+				->setTemplate('RhapsodyForumBundle:Topic:list.html.twig');
+			return $this->createResponseBuilder($view);
+		}
+		catch (\Exception $ex) {
+			$this->logger->error("Failed to render topics list");
+			throw $ex;
+		}
 	}
 
 	/**
@@ -158,13 +182,13 @@ class TopicDelegate extends Delegate
 	 */
 	public function newAction(Request $request, $forum, $category = null)
 	{
-		/** @var $topicManager \Rhapsody\ForumBundle\Doctrine\TopicManagerInterface */
+		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
 		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
 
 		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
 		$formFactory = $this->container->get('rhapsody_forum.topic.form.factory');
 
-		/** @var $topic \Rhapsody\ForumBundle\Model\TopicInterface */
+		/** @var $topic \Rhapsody\SocialBundle\Model\TopicInterface */
 		$topic = $topicManager->newTopic($forum, $category);
 		$form = $formFactory->createForm();
 		$form->setData($topic);
@@ -181,7 +205,7 @@ class TopicDelegate extends Delegate
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $request The request.
 	 * @param \Rhapsody\ForumBundle\Model\ForumInterface $forum The forum.
-	 * @param \Rhapsody\ForumBundle\Model\TopicInterface $topic The topic.
+	 * @param \Rhapsody\SocialBundle\Model\TopicInterface $topic The topic.
 	 */
 	public function replyAction(Request $request, ForumInterface $forum, TopicInterface $topic)
 	{
@@ -191,7 +215,7 @@ class TopicDelegate extends Delegate
 		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
 		$formFactory = $this->container->get('rhapsody_forum.post.form.factory');
 
-		/** @var $post \Rhapsody\ForumBundle\Model\PostInterface */
+		/** @var $post \Rhapsody\SocialBundle\Model\PostInterface */
 		$post = $postManager->newPost($topic);
 		$form = $formFactory->createForm();
 		$form->setData($post);
@@ -209,17 +233,17 @@ class TopicDelegate extends Delegate
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $request The request.
 	 * @param \Rhapsody\ForumBundle\Model\ForumInterface $forum The forum.
-	 * @param \Rhapsody\ForumBundle\Model\TopicInterface $topic The topic.
+	 * @param \Rhapsody\SocialBundle\Model\TopicInterface $topic The topic.
 	 */
 	public function viewAction(Request $request, ForumInterface $forum, $topicId)
 	{
 		/** @var $eventDispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
 		$eventDispatcher = $this->container->get('event_dispatcher');
 
-		/** @var $topicManager \Rhapsody\ForumBundle\Doctrine\TopicManagerInterface */
+		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
 		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
 
-		/** @var $topicManager \Rhapsody\ForumBundle\Doctrine\TopicManagerInterface */
+		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
 		$postManager = $this->container->get('rhapsody.forum.doctrine.post_manager');
 
 		/** @var $paginator \Knp\Components\Pager\Paginator */

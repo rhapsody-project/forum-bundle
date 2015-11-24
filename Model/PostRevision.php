@@ -27,6 +27,8 @@
  */
 namespace Rhapsody\ForumBundle\Model;
 
+use Rhapsody\SocialBundle\Model\PostRevision as BasePostRevision;
+
 /**
  *
  * @author    Sean W. Quinn
@@ -37,108 +39,12 @@ namespace Rhapsody\ForumBundle\Model;
  * @version   $Id$
  * @since     1.0
  */
-class PostRevision
+class PostRevision extends BasePostRevision
 {
-
-	/**
-	 * The author of the post.
-	 * @var mixed
-	 * @access protected
-	 */
-	protected $author;
-
-	/**
-	 * The comment explaining the revision.
-	 * @var string
-	 * @access protected
-	 */
-	protected $comment;
-
-	/**
-	 * The date and time that this revision was created.
-	 * @var \DateTime
-	 * @access protected
-	 */
-	protected $created;
-
-
-	/**
-	 * The text of this post.
-	 * @var string
-	 * @access protected
-	 */
-	protected $text;
 
 	public function __construct()
 	{
-		$this->created = new \DateTime();
+		parent::__construct();
 	}
 
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\PostRevisionInterface::getAuthor()
-	 */
-	public function getAuthor()
-	{
-		return $this->author;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\PostRevisionInterface::getCreated()
-	 */
-	public function getCreated()
-	{
-		return $this->created;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\PostRevisionInterface::getComment()
-	 */
-	public function getComment()
-	{
-		return $this->comment;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\PostRevisionInterface::getText()
-	 */
-	public function getText()
-	{
-		return $this->text;
-	}
-
-	/**
-	 * @param mixed $author
-	 */
-	public function setAuthor($author)
-	{
-		$this->author = $author;
-	}
-
-	/**
-	 * @param \DateTime $created
-	 */
-	public function setCreated(\DateTime $created)
-	{
-		$this->created = $created;
-	}
-
-	/**
-	 * @param string $comment
-	*/
-	public function setComment($comment)
-	{
-		$this->comment = $comment;
-	}
-
-	/**
-	 * @param string $text
-	 */
-	public function setText($text)
-	{
-		$this->text = $text;
-	}
 }

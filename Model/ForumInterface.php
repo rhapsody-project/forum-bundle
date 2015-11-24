@@ -27,6 +27,8 @@
  */
 namespace Rhapsody\ForumBundle\Model;
 
+use Rhapsody\SocialBundle\Model\SocialContextInterface;
+
 /**
  *
  * @author    Sean W. Quinn
@@ -37,8 +39,13 @@ namespace Rhapsody\ForumBundle\Model;
  * @version   $Id$
  * @since     1.0
  */
-interface ForumInterface
+interface ForumInterface extends SocialContextInterface
 {
 
+	/**
+	 * Return whether the social context is enabled or not.
+	 * @see boolean whether the social context is enabled or not.
+	 */
+	function isEnabled();
 
 }

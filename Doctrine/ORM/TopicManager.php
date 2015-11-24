@@ -29,10 +29,10 @@ namespace Rhapsody\ForumBundle\Doctrine\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Monolog\Logger;
-use Rhapsody\ForumBundle\Doctrine\TopicManagerInterface;
-use Rhapsody\ForumBundle\Factory\BuilderFactoryInterface;
-use Rhapsody\ForumBundle\Model\TopicInterface;
+use Rhapsody\SocialBundle\Factory\BuilderFactoryInterface;
+use Rhapsody\SocialBundle\Doctrine\TopicManager as BaseTopicManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Rhapsody\SocialBundle\Doctrine\TopicManager;
 
 /**
  *
@@ -44,146 +44,14 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @version   $Id$
  * @since     1.0
  */
-class TopicManager implements TopicManagerInterface
+class TopicManager extends BaseTopicManager
 {
-	/**
-	 * Whether or not to automatically flush changes after a persistence
-	 * operation is performed.
-	 * @var boolean
-	 * @access protected
-	 */
-	protected $autoFlush = true;
-
-	/**
-	 * The logging device.
-	 * @var \Monolog\Logger
-	 * @access protected
-	 */
-	protected $logger;
-
-	/**
-	 * The event dispatcher.
-	 * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-	 * @access protected
-	 */
-	protected $eventDispatcher;
-
-	/**
-	 * The object manager.
-	 * @var \Doctrine\Common\Persistence\ObjectManager
-	 * @access protected
-	 */
-	protected $objectManager;
-
-	/**
-	 * The repository.
-	 * @var \Doctrine\ODM\MongoDB\DocumentRepository
-	 * @access protected
-	 */
-	protected $repository;
-
-	/**
-	 * The class builder factory.
-	 * @var \Rhapsody\ForumBundle\Factory\BuilderFactoryInterface
-	 * @access protected
-	 */
-	protected $builderFactory;
-
-	/**
-	 * The class.
-	 * @var string
-	 * @access protected
-	 */
-	protected $class;
 
 	public function __construct(ObjectManager $objectManager, EventDispatcherInterface $eventDispatcher, BuilderFactoryInterface $builderFactory, $class)
 	{
-		$repository = $objectManager->getRepository($class);
-		$metadata = $objectManager->getClassMetadata($class);
-
-		$this->class = $metadata->getName();
-		$this->repository = $repository;
-		$this->eventDispatcher = $eventDispatcher;
-		$this->objectManager = $objectManager;
-		$this->builderFactory = $builderFactory;
+		parent::__construct($objectManager, $eventDispatcher, $builderFactory, $postManager, $class);
 
 		$this->logger = new Logger(get_class($this));
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\TopicManagerInterface::createTopicBuilder()
-	 */
-	public function createTopicBuilder()
-	{
-		return $this->topicBuilderFactory->create();
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\TopicManagerInterface::findBySlug()
-	 */
-	public function findBySlug($slug)
-	{
-			return $this->repository->findBySlug($slug);
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\TopicManagerInterface::findAll()
-	 */
-	public function findAll()
-	{
-		return $this->repository->findAllTopics();
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\TopicManagerInterface::findAll()
-	 */
-	public function findAllByCategory($category)
-	{
-		return $this->repository->findAllByCategory($category);
-	}
-
-	/**
-	 *
-	 */
-	public function remove(TopicInterface $topic, $andFlush = true)
-	{
-		$category = $topic->getCategory();
-
-		$this->logger->debug(sprintf('Removing all posts associated with topic: %s.', $topic->getId()));
-		$posts = $this->TopicManager->findAllByTopic($topic);
-		$this->TopicManager->removeAll($posts);
-
-		$this->logger->debug(sprintf('Removing topic: %s.', $topic->getId()));
-		$this->objectManager->remove($topic);
-		if ($andFlush) {
-			$this->objectManager->flush();
-			//$this->categoryUpdater->update($category);
-		}
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\TopicManagerInterface::search()
-	 */
-	public function search($query, $paginate = true)
-	{
-		return $this->repository->search($query, $paginate);
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\TopicManagerInterface::update()
-	 */
-	public function update(TopicInterface $topic, $andFlush = true)
-	{
-		$this->objectManager->persist($topic);
-		if ($andFlush) {
-			$this->objectManager->flush();
-		}
 	}
 
 }

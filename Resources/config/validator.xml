@@ -5,7 +5,7 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-      <parameter key="rhapsody.forum.validator.constraint_validator.class">Rhapsody\ForumBundle\Validator\ConstraintValidator</parameter>
+      <parameter key="rhapsody.forum.validator.constraint_validator.class">Rhapsody\SocialBundle\Validator\ConstraintValidator</parameter>
 		</parameters>
 
     <services>

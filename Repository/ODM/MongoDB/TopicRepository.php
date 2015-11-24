@@ -29,7 +29,8 @@ namespace Rhapsody\ForumBundle\Repository\ODM\MongoDB;
 
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Rhapsody\ForumBundle\Model\ForumInterface;
-use Rhapsody\ForumBundle\Repository\TopicRepositoryInterface;
+use Rhapsody\SocialBundle\Model\SocialContextInterface;
+use Rhapsody\SocialBundle\Repository\TopicRepositoryInterface;
 
 /**
  *
@@ -45,7 +46,7 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 {
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::findOneById()
+	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findOneById()
 	 */
 	public function findById($id)
 	{
@@ -59,7 +60,7 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::findOneByCategoryAndSlug()
+	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findOneByCategoryAndSlug()
 	 */
 	public function findOneByCategoryAndSlug($category, $slug)
 	{
@@ -71,21 +72,31 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::findOneById()
+	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findOneById()
 	 */
 	public function findOneById($id)
 	{
 		return $this->find($id);
 	}
 
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::findAll()
-	 */
 	public function findAllByForum(ForumInterface $forum)
 	{
+		return $this->findAllBySocialContext($forum);
+	}
+
+	public function findAllByForumAndCategory(ForumInterface $forum, $category)
+	{
+		return $this->findAllBySocialContextAndCategory($forum, $category);
+	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findAllBySocialContext()
+	 */
+	public function findAllBySocialContext(SocialContextInterface $socialContext)
+	{
 		$qb = $this->createQueryBuilder()
-			->field('forum.$id')->equals(new \MongoId($forum->getId()))
+			->field('socialContext.$id')->equals(new \MongoId($socialContext->getId()))
 			->sort('lastUpdated', 'DESC');
 		$query = $qb->getQuery();
 
@@ -94,12 +105,12 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::findAllByCategory()
+	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findAllBySocialContextAndCategory()
 	 */
-	public function findAllByForumAndCategory(ForumInterface $forum, $category)
+	public function findAllBySocialContextAndCategory(SocialContextInterface $socialContext, $category)
 	{
 		$qb = $this->createQueryBuilder('t')
-			->field('forum.$id')->equals(new \MongoId($forum->getId()))
+			->field('socialContext.$id')->equals(new \MongoId($socialContext->getId()))
 			->field('category.$id')->equals(new \MongoId($category->getId()))
 			->sort('lastUpdated', 'DESC');
 		$query = $qb->getQuery();
@@ -108,12 +119,12 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::findLatestPosted()
+	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findLatestPosted()
 	 */
-	public function findLatestPosted(ForumInterface $forum, $number)
+	public function findLatestPosted(SocialContextInterface $socialContext, $number)
 	{
 		$qb = $this->createQueryBuilder()
-			->field('forum.$id')->equals(new \MongoId($forum->getId()))
+			->field('socialContext.$id')->equals(new \MongoId($socialContext->getId()))
 			->sort('lastUpdated', 'DESC')
 			->limit($number);
 		$query = $qb->getQuery();
@@ -122,7 +133,7 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::search()
+	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::search()
 	 */
 	public function search($query)
 	{
@@ -136,7 +147,7 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\TopicRepositoryInterface::incrementTopicNumViews()
+	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::incrementTopicNumViews()
 	 */
 	public function incrementTopicNumViews($topic)
 	{

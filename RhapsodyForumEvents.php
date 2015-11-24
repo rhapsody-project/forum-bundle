@@ -51,6 +51,17 @@ class RhapsodyForumEvents
 	const NEW_TOPIC = 'rhapsody.forum.event.topic.new';
 
 	/**
+	 * The POST_EDITED event occurs when a post is edited by a user.
+	 *
+	 * This event allows the forum bundle to notify participants in a post
+	 * discussion that a post has been edited, based on their notification
+	 * preferences.
+	 *
+	 * The event listener method receives a \Rhapsody\SocialBundle\Event\TopicEvent instance.
+	 */
+	const POST_EDITED = 'rhapsody.forum.event.post.edited';
+
+	/**
 	 * The REPLY_TO_TOPIC event occurs when a user posts a reply to a topic.
 	 *
 	 * This event allows the forum bundle to notify participants of a topic

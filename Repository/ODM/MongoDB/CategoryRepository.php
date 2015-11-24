@@ -28,7 +28,7 @@
 namespace Rhapsody\ForumBundle\Repository\ODM\MongoDB;
 
 use Doctrine\ODM\MongoDB\DocumentRepository;
-use Rhapsody\ForumBundle\Repository\CategoryRepositoryInterface;
+use Rhapsody\SocialBundle\Repository\CategoryRepositoryInterface;
 
 /**
  *
@@ -44,7 +44,7 @@ class CategoryRepository extends DocumentRepository implements CategoryRepositor
 {
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\CategoryRepositoryInterface::findById()
+	 * @see \Rhapsody\SocialBundle\Repository\CategoryRepositoryInterface::findById()
 	 */
 	public function findById($id)
 	{
@@ -53,7 +53,7 @@ class CategoryRepository extends DocumentRepository implements CategoryRepositor
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\CategoryRepositoryInterface::findOneBySlug()
+	 * @see \Rhapsody\SocialBundle\Repository\CategoryRepositoryInterface::findOneBySlug()
 	 */
 	public function findBySlug($slug)
 	{
@@ -62,7 +62,7 @@ class CategoryRepository extends DocumentRepository implements CategoryRepositor
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\CategoryRepositoryInterface::findOneById()
+	 * @see \Rhapsody\SocialBundle\Repository\CategoryRepositoryInterface::findOneById()
 	 */
 	public function findAllByTopic($topic)
 	{
@@ -78,7 +78,7 @@ class CategoryRepository extends DocumentRepository implements CategoryRepositor
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\CategoryRepositoryInterface::findOneById()
+	 * @see \Rhapsody\SocialBundle\Repository\CategoryRepositoryInterface::findOneById()
 	 */
 	public function findRecentByTopic($topic, $number)
 	{
@@ -87,7 +87,7 @@ class CategoryRepository extends DocumentRepository implements CategoryRepositor
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\CategoryRepositoryInterface::findOneById()
+	 * @see \Rhapsody\SocialBundle\Repository\CategoryRepositoryInterface::findOneById()
 	 */
 	public function search($query)
 	{
@@ -96,7 +96,7 @@ class CategoryRepository extends DocumentRepository implements CategoryRepositor
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\CategoryRepositoryInterface::findOneById()
+	 * @see \Rhapsody\SocialBundle\Repository\CategoryRepositoryInterface::findOneById()
 	 */
 	public function getPostBefore($post)
 	{
@@ -104,7 +104,7 @@ class CategoryRepository extends DocumentRepository implements CategoryRepositor
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\CategoryRepositoryInterface::findOneById()
+	 * @see \Rhapsody\SocialBundle\Repository\CategoryRepositoryInterface::findOneById()
 	 */
 	public function createNewPost()
 	{

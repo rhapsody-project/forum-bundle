@@ -1,5 +1,5 @@
 <?php
-/* Copyright (c) 2013 Rhapsody Project
+/* Copyright (c) 2015 Rhapsody Project
  *
  * Licensed under the MIT License (http://opensource.org/licenses/MIT)
  *
@@ -27,8 +27,6 @@
  */
 namespace Rhapsody\ForumBundle\Doctrine;
 
-use Rhapsody\ForumBundle\Model\ForumInterface;
-
 /**
  *
  * @author    Sean W. Quinn
@@ -41,9 +39,5 @@ use Rhapsody\ForumBundle\Model\ForumInterface;
  */
 interface ForumManagerInterface
 {
-
-	function findById($id);
-
-	function update(ForumInterface $category, $andFlush = true);
 
 }

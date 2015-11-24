@@ -4,31 +4,31 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-  <route id="rhapsody_forum_post_create" pattern="/p/create.{_format}" methods="POST">
+  <route id="rhapsody_forum_post_create" path="/p/create.{_format}" methods="POST">
     <default key="_controller">RhapsodyForumBundle:Post:create</default>
     <default key="_format">html</default>
     <requirement key="post">\w+</requirement>
   </route>
 
-  <route id="rhapsody_forum_post_delete" pattern="/p/{post}/delete.{_format}" methods="POST,DELETE">
+  <route id="rhapsody_forum_post_delete" path="/p/{post}/delete.{_format}" methods="POST,DELETE">
     <default key="_controller">RhapsodyForumBundle:Post:delete</default>
     <default key="_format">html</default>
     <requirement key="post">\w+</requirement>
   </route>
 
-  <route id="rhapsody_forum_post_edit" pattern="/p/{post}/edit.{_format}" methods="GET">
+  <route id="rhapsody_forum_post_edit" path="/p/{post}/edit.{_format}" methods="GET">
     <default key="_controller">RhapsodyForumBundle:Post:edit</default>
     <default key="_format">html</default>
     <requirement key="post">\w+</requirement>
   </route>
 
-  <route id="rhapsody_forum_post_flag" pattern="/p/{post}/flag.{_format}" methods="POST">
+  <route id="rhapsody_forum_post_flag" path="/p/{post}/flag.{_format}" methods="POST">
     <default key="_controller">RhapsodyForumBundle:Post:flag</default>
     <default key="_format">html</default>
     <requirement key="post">\w+</requirement>
   </route>
 
-  <route id="rhapsody_forum_post_save" pattern="/p/{post}/save.{_format}" methods="POST">
+  <route id="rhapsody_forum_post_save" path="/p/{post}/save.{_format}" methods="POST">
     <default key="_controller">RhapsodyForumBundle:Post:save</default>
     <default key="_format">html</default>
     <requirement key="post">\w+</requirement>

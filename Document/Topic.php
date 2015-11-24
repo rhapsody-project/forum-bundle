@@ -31,30 +31,32 @@ use Rhapsody\ForumBundle\Model\Topic as TopicModel;
 
 /**
  *
- * @author    Sean W. Quinn
- * @category  Rhapsody ForumBundle
- * @package   Rhapsody\ForumBundle\Document
+ * @author Sean W. Quinn
+ * @category Rhapsody ForumBundle
+ * @package Rhapsody\ForumBundle\Document
  * @copyright Copyright (c) 2013 Rhapsody Project
- * @license   http://opensource.org/licenses/MIT
- * @version   $Id$
- * @since     1.0
+ * @license http://opensource.org/licenses/MIT
+ * @version $Id$
+ * @since 1.0
  */
 class Topic extends TopicModel
 {
+	use \Rhapsody\Commons\Traits\ObjectTrait;
+	use \Rhapsody\Commons\Traits\PropertyAwareTrait;
 
-  public function __construct()
-  {
-    parent::__construct();
-    $this->posts = new \Doctrine\Common\Collections\ArrayCollection;
-  }
+	public function __construct()
+	{
+		parent::__construct();
+		$this->posts = new \Doctrine\Common\Collections\ArrayCollection();
+	}
 
-  public function addPost($post)
-  {
-    $this->posts->add($post);
-  }
+	public function addPost($post)
+	{
+		$this->posts->add($post);
+	}
 
-  public function removePost($post)
-  {
-    $this->posts->removeElement($post);
-  }
+	public function removePost($post)
+	{
+		$this->posts->removeElement($post);
+	}
 }

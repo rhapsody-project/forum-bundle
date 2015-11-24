@@ -41,6 +41,8 @@ use Rhapsody\ForumBundle\Model\Forum as ForumModel;
  */
 class Forum extends ForumModel
 {
+	use \Rhapsody\Commons\Traits\ObjectTrait;
+	use \Rhapsody\Commons\Traits\PropertyAwareTrait;
 
 	public function __construct()
 	{

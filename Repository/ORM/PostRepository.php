@@ -28,7 +28,7 @@
 namespace Rhapsody\ForumBundle\Repository\ORM;
 
 use Doctrine\ORM\EntityRepository;
-use Rhapsody\ForumBundle\Repository\PostRepositoryInterface;
+use Rhapsody\SocialBundle\Repository\PostRepositoryInterface;
 
 /**
  *
@@ -45,7 +45,7 @@ class PostRepository extends EntityRepository implements PostRepositoryInterface
 
   /**
    * (non-PHPDoc)
-   * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findOneById()
+   * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
    */
   public function findOneById($id)
   {
@@ -54,7 +54,7 @@ class PostRepository extends EntityRepository implements PostRepositoryInterface
 
   /**
    * (non-PHPDoc)
-   * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findOneById()
+   * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
    */
   public function findAllByTopic($topic, $asPaginator)
   {
@@ -63,7 +63,7 @@ class PostRepository extends EntityRepository implements PostRepositoryInterface
 
   /**
    * (non-PHPDoc)
-   * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findOneById()
+   * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
    */
   public function findRecentByTopic($topic, $number)
   {
@@ -72,7 +72,7 @@ class PostRepository extends EntityRepository implements PostRepositoryInterface
 
   /**
    * (non-PHPDoc)
-   * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findOneById()
+   * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
    */
   public function search($query, $asPaginator)
   {
@@ -81,7 +81,7 @@ class PostRepository extends EntityRepository implements PostRepositoryInterface
 
   /**
    * (non-PHPDoc)
-   * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findOneById()
+   * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
    */
   public function getPostBefore($post)
   {
@@ -89,7 +89,7 @@ class PostRepository extends EntityRepository implements PostRepositoryInterface
 
   /**
    * (non-PHPDoc)
-   * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findOneById()
+   * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
    */
   public function createNewPost()
   {

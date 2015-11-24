@@ -31,20 +31,24 @@ use Rhapsody\ForumBundle\Model\Post as PostModel;
 
 /**
  *
- * @author    Sean W. Quinn
- * @category  Rhapsody ForumBundle
- * @package   Rhapsody\ForumBundle\Document
+ * @author Sean W. Quinn
+ * @category Rhapsody ForumBundle
+ * @package Rhapsody\ForumBundle\Document
  * @copyright Copyright (c) 2013 Rhapsody Project
- * @license   http://opensource.org/licenses/MIT
- * @version   $Id$
- * @since     1.0
+ * @license http://opensource.org/licenses/MIT
+ * @version $Id$
+ * @since 1.0
  */
 class Post extends PostModel
 {
+	use \Rhapsody\Commons\Traits\ObjectTrait;
+	use \Rhapsody\Commons\Traits\PropertyAwareTrait;
 
-  public function __construct()
-  {
-    parent::__construct();
-  }
-
+	public function __construct()
+	{
+		parent::__construct();
+		$this->attachments = new \Doctrine\Common\Collections\ArrayCollection;
+		$this->endorsements = new \Doctrine\Common\Collections\ArrayCollection;
+		$this->revisions = new \Doctrine\Common\Collections\ArrayCollection;
+	}
 }

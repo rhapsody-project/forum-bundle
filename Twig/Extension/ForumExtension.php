@@ -28,14 +28,9 @@
 namespace Rhapsody\ForumBundle\Twig\Extension;
 
 use Rhapsody\ComponentExtensionBundle\Routing\RouteTranslatorInterface;
-use Rhapsody\ForumBundle\Factory\FormatterFactoryInterface;
-use Rhapsody\ForumBundle\Model\PostInterface;
+use Rhapsody\SocialBundle\Factory\FormatterFactoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Rhapsody\ForumBundle\Model\TopicInterface;
 
 /**
  *
@@ -90,7 +85,7 @@ class ForumExtension extends \Twig_Extension
 	public function getCategoryClass($category)
 	{
 		$class = 'uncategorized';
-		if ($category !== null && $category instanceof \Rhapsody\ForumBundle\Model\CategoryInterface) {
+		if ($category !== null && $category instanceof \Rhapsody\SocialBundle\Model\CategoryInterface) {
 			$class = $category->getName();
 		}
 		return strtolower(trim($class));
@@ -109,69 +104,83 @@ class ForumExtension extends \Twig_Extension
 	 */
 	public function getFunctions()
 	{
-		$functions = array();
+		return array(
+			new \Twig_SimpleFunction('rhapsody_forum_category_class',
+				array($this, 'getCategoryClass'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_category_class'] = new \Twig_Function_Method($this, 'getCategoryClass', array(
-			'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_category_url',
+				array($this, 'getCategoryUrl'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_category_url'] = new \Twig_Function_Method($this, 'getCategoryUrl', array(
-			'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_format_text',
+				array($this, 'formatText'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_format_text'] = new \Twig_Function_Method($this, 'formatText', array(
-			'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_url',
+				array($this, 'getForumUrl'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_url'] = new \Twig_Function_Method($this, 'getForumUrl', array(
-			'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_post_create_url',
+				array($this, 'getPostCreateUrl'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_post_create_url'] = new \Twig_Function_Method($this, 'getPostCreateUrl', array(
-			'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_post_delete_url',
+				array($this, 'getPostDeleteUrl'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_post_delete_url'] = new \Twig_Function_Method($this, 'getPostDeleteUrl', array(
-			'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_post_edit_url',
+				array($this, 'getPostEditUrl'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_post_edit_url'] = new \Twig_Function_Method($this, 'getPostEditUrl', array(
-			'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_post_save_url',
+				array($this, 'getPostSaveUrl'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_post_save_url'] = new \Twig_Function_Method($this, 'getPostSaveUrl', array(
-			'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_post_url',
+				array($this, 'getPostUrl'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_post_url'] = new \Twig_Function_Method($this, 'getPostUrl', array(
-			'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_topic_atom_feed_url',
+				array($this, 'getAtomFeedUrlForTopic'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_topic_atom_feed_url'] = new \Twig_Function_Method($this, 'getAtomFeedUrlForTopic', array(
-			'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_topic_create_url',
+				array($this, 'getTopicCreateUrl'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_topic_create_url'] = new \Twig_Function_Method($this, 'getTopicCreateUrl', array(
-				'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_topic_url',
+				array($this, 'getTopicUrl'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_topic_url'] = new \Twig_Function_Method($this, 'getTopicUrl', array(
-			'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_topic_reply_url',
+				array($this, 'getTopicReplyUrl'),
+				array('is_safe' => array('html'))
+			),
 
-		$functions['rhapsody_forum_topic_reply_url'] = new \Twig_Function_Method($this, 'getTopicReplyUrl', array(
-				'is_safe' => array('html')
-		));
+			new \Twig_SimpleFunction('rhapsody_forum_topic_user_url',
+				array($this, 'getTopicUserUrl'),
+				array(
+					'is_safe' => array('html')
+			)),
 
-		$functions['rhapsody_forum_topic_user_url'] = new \Twig_Function_Method($this, 'getTopicUserUrl', array(
-				'is_safe' => array('html')
-		));
-
-		$functions['rhapsody_forum_user_url'] = new \Twig_Function_Method($this, 'getUserUrl', array(
-				'is_safe' => array('html')
-		));
-
-		return $functions;
+			new \Twig_SimpleFunction('rhapsody_forum_user_url',
+				array($this, 'getUserUrl'),
+				array('is_safe' => array('html'))
+			),
+		);
 	}
 
 	public function getName()

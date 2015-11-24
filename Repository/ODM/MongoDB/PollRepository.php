@@ -28,7 +28,7 @@
 namespace Rhapsody\ForumBundle\Repository\ODM\MongoDB;
 
 use Doctrine\ODM\MongoDB\DocumentRepository;
-use Rhapsody\ForumBundle\Repository\PostRepositoryInterface;
+use Rhapsody\SocialBundle\Repository\PollRepositoryInterface;
 
 /**
  *

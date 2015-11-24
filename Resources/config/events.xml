@@ -16,7 +16,9 @@
             <argument type="service" id="rhapsody.forum.mailer.twig_swift_mailer" />
             <argument type="service" id="router" />
             <argument type="service" id="session" />
+            <argument type="service" id="rhapsody.social.doctrine.activity_manager" />
             <argument type="service" id="rhapsody.forum.doctrine.topic_manager" />
+            <argument type="service" id="rhapsody.forum.factory.template_factory" />
         </service>
 
     </services>

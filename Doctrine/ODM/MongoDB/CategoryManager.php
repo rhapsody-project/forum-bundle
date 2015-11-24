@@ -28,10 +28,8 @@
 namespace Rhapsody\ForumBundle\Doctrine\ODM\MongoDB;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use Monolog\Logger;
-use Rhapsody\ForumBundle\Doctrine\CategoryManagerInterface;
-use Rhapsody\ForumBundle\Factory\BuilderFactoryInterface;
-use Rhapsody\ForumBundle\Model\CategoryInterface;
+use Rhapsody\SocialBundle\Factory\BuilderFactoryInterface;
+use Rhapsody\SocialBundle\Doctrine\ODM\MongoDB\CategoryManager as BaseCategoryManager;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -44,100 +42,16 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @version   $Id$
  * @since     1.0
  */
-class CategoryManager implements CategoryManagerInterface
+class CategoryManager extends BaseCategoryManager
 {
-	/**
-	 * Whether or not to automatically flush changes after a persistence
-	 * operation is performed.
-	 * @var boolean
-	 * @access protected
-	 */
-	protected $autoFlush = true;
 
 	/**
-	 * The logging device.
-	 * @var \Monolog\Logger
-	 * @access protected
+	 * (non-PHPDoc)
+	 * @see Rhapsody\SocialBundle\Doctrine\PostManager::__construct()
 	 */
-	protected $logger;
-
-	/**
-	 * The event dispatcher.
-	 * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-	 * @access protected
-	 */
-	protected $eventDispatcher;
-
-	/**
-	 * The object manager.
-	 * @var \Doctrine\Common\Persistence\ObjectManager
-	 * @access protected
-	 */
-	protected $objectManager;
-
-	/**
-	 * The repository.
-	 * @var \Doctrine\ODM\MongoDB\DocumentRepository
-	 * @access protected
-	 */
-	protected $repository;
-
-	/**
-	 * The class builder factory.
-	 * @var \Rhapsody\ForumBundle\Factory\BuilderFactoryInterface
-	 * @access protected
-	 */
-	protected $builderFactory;
-
-	/**
-	 * The class.
-	 * @var string
-	 * @access protected
-	 */
-	protected $class;
-
 	public function __construct(ObjectManager $objectManager, EventDispatcherInterface $eventDispatcher, BuilderFactoryInterface $builderFactory, $class)
 	{
-		$repository = $objectManager->getRepository($class);
-		$metadata = $objectManager->getClassMetadata($class);
-
-		$this->class = $metadata->getName();
-		$this->repository = $repository;
-		$this->eventDispatcher = $eventDispatcher;
-		$this->objectManager = $objectManager;
-		$this->builderFactory = $builderFactory;
-
-		$this->logger = new Logger(get_class($this));
+		parent::__construct($objectManager, $eventDispatcher, $builderFactory, $class);
 	}
 
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\CategoryManagerInterface::findBySlug()
-	 */
-	public function findBySlug($slug)
-	{
-			return $this->repository->findBySlug($slug);
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\CategoryManagerInterface::findAll()
-	 */
-	public function findAll($map = false)
-	{
-		$results = $this->repository->findAll();
-		return !$map ? array_values($results) : $results;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\CategoryManagerInterface::update()
-	 */
-	public function update(CategoryInterface $category, $andFlush = true)
-	{
-		$this->objectManager->persist($category);
-		if ($andFlush) {
-			$this->objectManager->flush();
-		}
-	}
 }

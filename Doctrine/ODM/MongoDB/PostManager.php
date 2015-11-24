@@ -29,10 +29,10 @@ namespace Rhapsody\ForumBundle\Doctrine\ODM\MongoDB;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Monolog\Logger;
-use Rhapsody\ForumBundle\Doctrine\PostManagerInterface;
-use Rhapsody\ForumBundle\Factory\BuilderFactoryInterface;
-use Rhapsody\ForumBundle\Model\PostInterface;
-use Rhapsody\ForumBundle\Model\TopicInterface;
+use Rhapsody\SocialBundle\Doctrine\ODM\MongoDB\PostManager as BasePostManager;
+use Rhapsody\SocialBundle\Factory\BuilderFactoryInterface;
+use Rhapsody\SocialBundle\Model\PostInterface;
+use Rhapsody\SocialBundle\Model\TopicInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -45,180 +45,18 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @version   $Id$
  * @since     1.0
  */
-class PostManager implements PostManagerInterface
+class PostManager extends BasePostManager
 {
-	/**
-	 * Whether or not to automatically flush changes after a persistence
-	 * operation is performed.
-	 * @var boolean
-	 * @access protected
-	 */
-	protected $autoFlush = true;
 
 	/**
-	 * The logging device.
-	 * @var \Monolog\Logger
-	 * @access protected
+	 * (non-PHPDoc)
+	 * @see Rhapsody\SocialBundle\Doctrine\PostManager::__construct()
 	 */
-	protected $logger;
-
-	/**
-	 * The event dispatcher.
-	 * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-	 * @access protected
-	 */
-	protected $eventDispatcher;
-
-	/**
-	 * The object manager.
-	 * @var \Doctrine\Common\Persistence\ObjectManager
-	 * @access protected
-	 */
-	protected $objectManager;
-
-	/**
-	 * The repository.
-	 * @var \Doctrine\ODM\MongoDB\DocumentRepository
-	 * @access protected
-	 */
-	protected $repository;
-
-	/**
-	 * The class builder factory.
-	 * @var \Rhapsody\ForumBundle\Factory\BuilderFactoryInterface
-	 * @access protected
-	 */
-	protected $builderFactory;
-
-	/**
-	 * The class.
-	 * @var string
-	 * @access protected
-	 */
-	protected $class;
-
 	public function __construct(ObjectManager $objectManager, EventDispatcherInterface $eventDispatcher, BuilderFactoryInterface $builderFactory, $class)
 	{
-		$repository = $objectManager->getRepository($class);
-		$metadata = $objectManager->getClassMetadata($class);
-
-		$this->class = $metadata->getName();
-		$this->repository = $repository;
-		$this->eventDispatcher = $eventDispatcher;
-		$this->objectManager = $objectManager;
-		$this->builderFactory = $builderFactory;
+		parent::__construct($objectManager, $eventDispatcher, $builderFactory, $class);
 
 		$this->logger = new Logger(get_class($this));
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\PostManagerInterface::createPostBuilder()
-	 */
-	public function createPostBuilder()
-	{
-		return $this->builderFactory->createBuilder();
-	}
-
-	public function createPost(PostInterface $post, TopicInterface $topic, $user)
-	{
-		$post->setAuthor($user);
-		$post->setTopic($topic);
-
-		$this->update($post);
-		return $post;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\PostManagerInterface::findByTopic()
-	 */
-	public function findAllByTopic($topic)
-	{
-		return $this->repository->findAllByTopic($topic);
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\PostManagerInterface::findByTopic()
-	 */
-	public function findRecentByTopic($topic, $limit = 10)
-	{
-		return $this->repository->findRecentByTopic($topic, $limit);
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\PostManagerInterface::findBySlug()
-	 */
-	public function findById($id)
-	{
-		return $this->repository->findById($id);
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\PostManagerInterface::findBySlug()
-	 */
-	public function findBySlug($slug)
-	{
-		return $this->repository->findBySlug($slug);
-	}
-
-	public function findPageByTopicAndPost(TopicInterface $topic, PostInterface $post, $limit = 10)
-	{
-		if ($limit < 1) {
-			throw new \InvalidArgumentException('Limit must be a value greater than or equal to 1.');
-		}
-		$position = $this->repository->findPositionByTopicAndPost($topic, $post);
-		return ceil($position / $limit);
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\PostManagerInterface::findAll()
-	 */
-	public function findAll($map = false)
-	{
-		$results = $this->repository->findAll();
-		return !$map ? array_values($map) : $map;
-	}
-
-	public function getPostCountByTopic($topic)
-	{
-		return $this->repository->getPostCountByTopic($topic);
-	}
-
-	/**
-	 *
-	 */
-	public function newPost(TopicInterface $topic)
-	{
-		$post = $this->createPostBuilder()
-			->setTopic($topic)
-			->build();
-		return $post;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\PostManagerInterface::search()
-	 */
-	public function search($query)
-	{
-		return $this->repository->search($query);
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\PostManagerInterface::updatePost()
-	 */
-	public function update(PostInterface $post, $andFlush = true)
-	{
-		$this->objectManager->persist($post);
-		if ($andFlush) {
-			$this->objectManager->flush();
-		}
 	}
 
 }

@@ -1,24 +1,33 @@
 {
-    "name": "rhapsody-project/forum-bundle",
-    "type": "symfony-bundle",
-    "description": "Rhapsody Project ForumBundle for Symfony",
-    "keywords": ["forum"],
-    "homepage": "https://github.com/rhapsody-project/forum-bundle",
-    "version": "1.0.0",
-    "license": "MIT",
-    "authors": [
-        { "name": "Sean Quinn", "email": "sean.quinn@extesla.org" },
-        { "name": "Rhapsody Project", "homepage": "https://github.com/rhapsody-project/forum-bundle/contributors" }
-    ],
-    "require": {
-        "php": ">=5.3.2",
-        "knplabs/knp-paginator-bundle": "2.4.*@dev",
-        "symfony/monolog-bundle": "~2.4",
-        "rhapsody-project/commons": "dev-master"
-    },
-    "autoload": {
-        "psr-0": { "Rhapsody\\ForumBundle": "" }
-    },
-    "target-dir": "Rhapsody/ForumBundle",
-    "minimum-stability": "dev"
+	"name" : "rhapsody-project/forum-bundle",
+	"type" : "symfony-bundle",
+	"description" : "Rhapsody Project ForumBundle for Symfony",
+	"keywords" : [
+		"forum"
+	],
+	"homepage" : "https://github.com/rhapsody-project/forum-bundle",
+	"version" : "1.0.0",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Sean Quinn",
+			"email" : "sean.quinn@extesla.org"
+		}, {
+			"name" : "Rhapsody Project",
+			"homepage" : "https://github.com/rhapsody-project/forum-bundle/contributors"
+		}
+	],
+	"require" : {
+		"php" : ">=5.3.2",
+		"knplabs/knp-paginator-bundle" : "2.4.*@dev",
+		"symfony/monolog-bundle" : "~2.4",
+		"rhapsody-project/commons" : "dev-master",
+		"rhapsody-project/social-bundle" : "dev-master"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"Rhapsody\\ForumBundle" : ""
+		}
+	},
+	"target-dir" : "Rhapsody/ForumBundle",
+	"minimum-stability" : "dev"
 }

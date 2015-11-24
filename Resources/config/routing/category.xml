@@ -4,14 +4,14 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-	<route id="rhapsody_forum_category_list" pattern="/list.{_format}">
+	<route id="rhapsody_forum_category_list" path="/list.{_format}">
 		<default key="_controller">RhapsodyForumBundle:Category:list</default>
 		<default key="_format">html</default>
 		<requirement key="_format">(html|xml)</requirement>
 		<requirement key="slug">[-\w]+</requirement>
 	</route>
 
-	<route id="rhapsody_forum_category_show" pattern="/{category}.{_format}">
+	<route id="rhapsody_forum_category_show" path="/{category}.{_format}">
 		<default key="_controller">RhapsodyForumBundle:Forum:show</default>
 		<default key="_format">html</default>
 		<requirement key="_format">(html|xml)</requirement>

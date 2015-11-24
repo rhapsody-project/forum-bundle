@@ -17,7 +17,7 @@
         <field name="created" fieldName="created" type="date" />
         <field name="lastUpdated" fieldName="lastUpdated" type="date" />
         <reference-one field="author" />
-        <reference-one field="forum" />
+        <reference-one field="socialContext" />
         <reference-one field="replyTo" />
         <reference-one field="topic">
           <cascade>

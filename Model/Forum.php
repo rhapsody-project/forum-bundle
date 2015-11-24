@@ -27,7 +27,8 @@
  */
 namespace Rhapsody\ForumBundle\Model;
 
-use Rhapsody\Commons\Web\SlugInflector;
+use Rhapsody\SocialBundle\Model\ActivitySourceInterface;
+use Rhapsody\SocialBundle\Model\SocialContext;
 
 /**
  *
@@ -39,22 +40,8 @@ use Rhapsody\Commons\Web\SlugInflector;
  * @version   $Id$
  * @since     1.0
  */
-class Forum implements ForumInterface
+class Forum extends SocialContext implements ForumInterface, ActivitySourceInterface
 {
-
-	/**
-	 * The identifier for the forum.
-	 * @var mixed
-	 * @access protected
-	 */
-	protected $id;
-
-	/**
-	 * The date that the forum was created.
-	 * @var \DateTime
-	 * @access protected
-	 */
-	protected $created;
 
 	/**
 	 * The description of the forum.
@@ -62,13 +49,6 @@ class Forum implements ForumInterface
 	 * @access protected
 	 */
 	protected $description;
-
-	/**
-	 * Whether the forum is enabled or not.
-	 * @var boolean
-	 * @access protected
-	 */
-	protected $enabled;
 
 	/**
 	 * The name of the forum.
@@ -98,9 +78,8 @@ class Forum implements ForumInterface
 	 */
 	public function __construct()
 	{
-		$this->created = new \DateTime;
+		parent::__construct();
 		$this->categories = array();
-		$this->enabled = true;
 	}
 
 	/**
@@ -114,29 +93,11 @@ class Forum implements ForumInterface
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::getCreated()
-	 */
-	public function getCreated()
-	{
-		return $this->created;
-	}
-
-	/**
-	 * (non-PHPDoc)
 	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::getDescription()
 	 */
 	public function getDescription()
 	{
 		return $this->description;
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::getId()
-	 */
-	public function getId()
-	{
-		return $this->id;
 	}
 
 	/**
@@ -158,21 +119,12 @@ class Forum implements ForumInterface
 	}
 
 	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::isEnabled()
+	 * Sets the collection of topics on the forum.
+	 * @param array $topics the collection of topics.
 	 */
-	public function isEnabled()
+	public function setCategories($categories)
 	{
-		return $this->enabled;
-	}
-
-	/**
-	 * Sets the creation date of the forum.
-	 * @param \DateTime $created the creation date.
-	 */
-	public function setCreated(\DateTime $created)
-	{
-		$this->created = $created;
+		$this->categories = $categories;
 	}
 
 	/**
@@ -182,33 +134,6 @@ class Forum implements ForumInterface
 	public function setDescription($description)
 	{
 		$this->description = $description;
-	}
-
-	/**
-	 * Sets the enabled status of the forum.
-	 * @param boolean $enabled whether to enable or disable the forum.
-	 */
-	public function setEnabled($enabled)
-	{
-		$this->enabled = $enabled;
-	}
-
-	/**
-	 * Sets the identifier of the forum.
-	 * @param mixed $id the identifier.
-	 */
-	public function setId($id)
-	{
-		$this->id = $id;
-	}
-
-	/**
-	 * Sets the last index date of the forum.
-	 * @param \DateTime $lastIndexed the last indexed date.
-	 */
-	public function setLastIndexed(\DateTime $lastIndexed)
-	{
-		$this->lastIndexed = $lastIndexed;
 	}
 
 	/**
@@ -230,14 +155,5 @@ class Forum implements ForumInterface
 	public function setOrder($order)
 	{
 		$this->order = $order;
-	}
-
-	/**
-	 * Sets the collection of topics on the forum.
-	 * @param array $topics the collection of topics.
-	 */
-	public function setCategories($categories)
-	{
-		$this->categories = $categories;
 	}
 }

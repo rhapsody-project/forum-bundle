@@ -27,6 +27,8 @@
  */
 namespace Rhapsody\ForumBundle\Model;
 
+use Rhapsody\SocialBundle\Model\Poll as BasePoll;
+
 /**
  *
  * @author    Sean W. Quinn
@@ -37,39 +39,30 @@ namespace Rhapsody\ForumBundle\Model;
  * @version   $Id$
  * @since     1.0
  */
-class Poll
+class Poll extends BasePoll implements ForumAwareInterface
 {
-
-	/**
-	 * The title of the poll. Often a question.
-	 * @property string
-	 * @access protected
-	 */
-	protected $title;
-
-	/**
-	 * Text (for added clarification) of the poll being taken.
-	 * @property string
-	 * @access protected
-	 */
-	protected $text;
-
-	/**
-	 * The options for this poll.
-	 * @property array
-	 * @access protected
-	 */
-	protected $options;
-
-	/**
-	 * The number of options that a user voting in the poll may select.
-	 * @property int
-	 * @access protected
-	 */
-	protected $numberOfOptions;
 
 	public function __construct()
 	{
-		
+		parent::__construct();
 	}
+
+	/**
+	 * (non-PHPDoc)
+	 * @see \Rhapsody\ForumBundle\Model\ForumAwareInterface::getForum()
+	 */
+	public function getForum()
+	{
+		return $this->getSocialContext();
+	}
+
+	/**
+	 * Sets the forum that this poll belongs to.
+	 * @param ForumInterface $forum the forum.
+	 */
+	public function setForum(ForumInterface $forum)
+	{
+		$this->setSocialContext($forum);
+	}
+
 }

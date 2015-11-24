@@ -28,14 +28,8 @@
  */
 namespace Rhapsody\ForumBundle\Controller;
 
-use FOS\RestBundle\View\View;
-use JMS\Serializer\SerializationContext;
-use Rhapsody\ForumBundle\Model\Topic;
-use Rhapsody\ForumBundle\Model\Category;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  *
@@ -81,7 +75,7 @@ class PostController extends Controller
 		/** @var $postManager \Rhapsody\ForumBundle\Doctrine\PostManagerInterface */
 		$postManager = $this->container->get('rhapsody.forum.doctrine.post_manager');
 
-		/** @var $post \Rhapsody\ForumBundle\Model\PostInterface */
+		/** @var $post \Rhapsody\SocialBundle\Model\PostInterface */
 		$post = $postManager->findById($request->attributes->get('post'));
 
 		$response = $delegate->saveAction($request, $post->getForum(), $post->getTopic(), $post);
@@ -101,7 +95,7 @@ class PostController extends Controller
 		/** @var $postManager \Rhapsody\ForumBundle\Doctrine\PostManagerInterface */
 		$postManager = $this->container->get('rhapsody.forum.doctrine.post_manager');
 
-		/** @var $post \Rhapsody\ForumBundle\Model\PostInterface */
+		/** @var $post \Rhapsody\SocialBundle\Model\PostInterface */
 		$post = $postManager->findById($request->attributes->get('post'));
 
 		$response = $delegate->editAction($request, $post->getTopic(), $post);
@@ -121,7 +115,7 @@ class PostController extends Controller
 		/** @var $postManager \Rhapsody\ForumBundle\Doctrine\PostManagerInterface */
 		$postManager = $this->container->get('rhapsody.forum.doctrine.post_manager');
 
-		/** @var $post \Rhapsody\ForumBundle\Model\PostInterface */
+		/** @var $post \Rhapsody\SocialBundle\Model\PostInterface */
 		$post = $postManager->findById($request->attributes->get('post'));
 
 		$response = $delegate->saveAction($request, $post->getTopic(), $post);

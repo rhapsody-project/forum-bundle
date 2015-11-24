@@ -30,10 +30,10 @@ namespace Rhapsody\ForumBundle\Controller\Delegate;
 use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
-use Rhapsody\ForumBundle\Event\TopicEventBuilder;
+use Rhapsody\SocialBundle\Event\TopicEventBuilder;
 use Rhapsody\ForumBundle\Model\ForumInterface;
-use Rhapsody\ForumBundle\Model\PostInterface;
-use Rhapsody\ForumBundle\Model\TopicInterface;
+use Rhapsody\SocialBundle\Model\PostInterface;
+use Rhapsody\SocialBundle\Model\TopicInterface;
 use Rhapsody\ForumBundle\RhapsodyForumEvents;
 use Rhapsody\RestBundle\HttpFoundation\Controller\Delegate;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,7 +66,7 @@ class PostDelegate extends Delegate
 		/** @var $postManager \Rhapsody\ForumBundle\Doctrine\PostManagerInterface */
 		$postManager = $this->container->get('rhapsody.forum.doctrine.post_manager');
 
-		/** @var $postManager \Rhapsody\ForumBundle\Doctrine\TopicManagerInterface */
+		/** @var $postManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
 		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
 
 		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
@@ -75,7 +75,7 @@ class PostDelegate extends Delegate
 		/** @var $user \Symfony\Component\Security\Core\User\UserInterface */
 		$user = $this->getUser();
 
-		/** @var $topic \Rhapsody\ForumBundle\Model\TopicInterface */
+		/** @var $topic \Rhapsody\SocialBundle\Model\TopicInterface */
 		$post = $postManager->newPost($topic);
 		$form = $formFactory->createForm();
 		$form->setData($post);
@@ -178,7 +178,7 @@ class PostDelegate extends Delegate
 		/** @var $user \Symfony\Component\Security\Core\User\UserInterface */
 		$user = $this->getUser();
 
-		/** @var $topic \Rhapsody\ForumBundle\Model\TopicInterface */
+		/** @var $topic \Rhapsody\SocialBundle\Model\TopicInterface */
 		$form = $formFactory->createForm();
 		$form->setData($post);
 		$form->handleRequest($request);

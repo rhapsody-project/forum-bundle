@@ -1,5 +1,5 @@
 <?php
-/* Copyright (c) 2013 Rhapsody Project
+/* Copyright (c) 2015 Rhapsody Project
  *
  * Licensed under the MIT License (http://opensource.org/licenses/MIT)
  *
@@ -28,8 +28,9 @@
 namespace Rhapsody\ForumBundle\Factory;
 
 use Rhapsody\ForumBundle\Builder\ForumBuilder;
-use Rhapsody\ForumBundle\Validator\ValidatorInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Rhapsody\SocialBundle\Validator\ValidatorInterface;
+use Rhapsody\SocialBundle\Factory\AbstractAuthorizationAwareFactory;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  *
@@ -41,27 +42,27 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  * @version   $Id$
  * @since     1.0
  */
-class ForumBuilderFactory extends AbstractSecurityContextFactory
+class ForumBuilderFactory extends AbstractAuthorizationAwareFactory
 {
 
   /**
    * Instantiates a new forum builder factory.
    *
-   * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
+   * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker
    *    The security context.
-   * @param \Rhapsody\ForumBundle\Validator\ValidatorInterface $validator
+   * @param \Rhapsody\SocialBundle\Validator\ValidatorInterface $validator
    *    The validator.
    * @param string $class
    *    The class to be created by the builder returned by the factory.
    */
-  public function __construct(SecurityContextInterface $securityContext, ValidatorInterface $validator, $class)
+  public function __construct(AuthorizationCheckerInterface $authorizationChecker, ValidatorInterface $validator, $class)
   {
-      parent::__construct($securityContext, $validator, $class);
+      parent::__construct($authorizationChecker, $validator, $class);
   }
 
   /**
    * (non-PHPDoc)
-   * @see \Rhapsody\ForumBundle\Factory\BuilderFactoryInterface::createBuilder()
+   * @see \Rhapsody\SocialBundle\Factory\BuilderFactoryInterface::createBuilder()
    */
   public function createBuilder()
   {

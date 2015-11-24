@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-      <parameter key="rhapsody.forum.mailer.twig_swift_mailer.class">Rhapsody\ForumBundle\Mailer\TwigSwiftMailer</parameter>
+      <parameter key="rhapsody.forum.mailer.twig_swift_mailer.class">Rhapsody\SocialBundle\Mailer\TwigSwiftMailer</parameter>
       <parameter key="rhapsody.forum.twig.extension.forum_extension.class">Rhapsody\ForumBundle\Twig\Extension\ForumExtension</parameter>
 	</parameters>
 
@@ -23,5 +23,16 @@
             <argument type="service" id="router" />
             <argument type="service" id="twig" />
         </service>
+        
+		<service id="rhapsody.forum.twig.template.activity.post_template" class="Rhapsody\CommonsBundle\Twig\TwigManagedTemplate">
+			<tag name="rhapsody.social.activity_template" />
+			<argument>Rhapsody\ForumBundle\Model\Post</argument>
+			<argument>RhapsodyForumBundle:Social:post.html.twig</argument>
+		</service>
+		<service id="rhapsody.forum.twig.template.activity.topic_template" class="Rhapsody\CommonsBundle\Twig\TwigManagedTemplate">
+			<tag name="rhapsody.social.activity_template" />
+			<argument>Rhapsody\ForumBundle\Model\Topic</argument>
+			<argument>RhapsodyForumBundle:Social:topic.html.twig</argument>
+		</service>
     </services>
 </container>

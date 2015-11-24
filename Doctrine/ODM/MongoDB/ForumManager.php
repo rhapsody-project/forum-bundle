@@ -30,8 +30,9 @@ namespace Rhapsody\ForumBundle\Doctrine\ODM\MongoDB;
 use Doctrine\Common\Persistence\ObjectManager;
 use Monolog\Logger;
 use Rhapsody\ForumBundle\Doctrine\ForumManagerInterface;
-use Rhapsody\ForumBundle\Factory\BuilderFactoryInterface;
 use Rhapsody\ForumBundle\Model\ForumInterface;
+use Rhapsody\SocialBundle\Doctrine\ODM\MongoDB\SocialContextManager;
+use Rhapsody\SocialBundle\Factory\BuilderFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -44,79 +45,17 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * @version   $Id$
  * @since     1.0
  */
-class ForumManager implements ForumManagerInterface
+class ForumManager extends SocialContextManager implements ForumManagerInterface
 {
-	/**
-	 * Whether or not to automatically flush changes after a persistence
-	 * operation is performed.
-	 * @var boolean
-	 * @access protected
-	 */
-	protected $autoFlush = true;
-
-	/**
-	 * The logging device.
-	 * @var \Monolog\Logger
-	 * @access protected
-	 */
-	protected $logger;
-
-	/**
-	 * The event dispatcher.
-	 * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-	 * @access protected
-	 */
-	protected $eventDispatcher;
-
-	/**
-	 * The object manager.
-	 * @var \Doctrine\Common\Persistence\ObjectManager
-	 * @access protected
-	 */
-	protected $objectManager;
-
-	/**
-	 * The repository.
-	 * @var \Doctrine\ODM\MongoDB\DocumentRepository
-	 * @access protected
-	 */
-	protected $repository;
-
-	/**
-	 * The class builder factory.
-	 * @var \Rhapsody\ForumBundle\Factory\BuilderFactoryInterface
-	 * @access protected
-	 */
-	protected $builderFactory;
-
-	/**
-	 * The class.
-	 * @var string
-	 * @access protected
-	 */
-	protected $class;
-
-	public function __construct(ObjectManager $objectManager, EventDispatcherInterface $eventDispatcher, BuilderFactoryInterface $builderFactory, $class)
-	{
-		$repository = $objectManager->getRepository($class);
-		$metadata = $objectManager->getClassMetadata($class);
-
-		$this->class = $metadata->getName();
-		$this->repository = $repository;
-		$this->eventDispatcher = $eventDispatcher;
-		$this->objectManager = $objectManager;
-		$this->builderFactory = $builderFactory;
-
-		$this->logger = new Logger(get_class($this));
-	}
 
 	/**
 	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\PostManagerInterface::createPostBuilder()
+	 * @see Rhapsody\SocialBundle\Doctrine\SocialContextManager::__construct()
 	 */
-	public function createForumBuilder()
+	public function __construct(ObjectManager $objectManager, EventDispatcherInterface $eventDispatcher, BuilderFactoryInterface $builderFactory, $class)
 	{
-		return $this->builderFactory->createBuilder();
+		parent::__construct($objectManager, $eventDispatcher, $builderFactory, $class);
+		$this->logger = new Logger(get_class($this));
 	}
 
 	public function createForum(ForumInterface $forum)
@@ -126,32 +65,12 @@ class ForumManager implements ForumManagerInterface
 	}
 
 	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\ForumManagerInterface::findById()
-	 */
-	public function findById($id)
-	{
-		return $this->repository->findById($id);
-	}
-
-	/**
 	 *
 	 */
 	public function newForum()
 	{
-		$forum = $this->createForumBuilder()->build();
+		$forum = $this->createSocialContextBuilder()->build();
 		return $forum;
 	}
 
-	/**
-	 * (non-PHPDoc)
-	 * @see Rhapsody\ForumBundle\Doctrine\ForumManagerInterface::update()
-	 */
-	public function update(ForumInterface $forum, $andFlush = true)
-	{
-		$this->objectManager->persist($forum);
-		if ($andFlush) {
-			$this->objectManager->flush();
-		}
-	}
 }

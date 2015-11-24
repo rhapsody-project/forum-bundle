@@ -29,13 +29,9 @@
 namespace Rhapsody\ForumBundle\Controller;
 
 use FOS\RestBundle\View\View;
-use JMS\Serializer\SerializationContext;
-use Rhapsody\ForumBundle\Form\Type\TopicForm;
-use Rhapsody\ForumBundle\Model\TopicInterface;
-use Rhapsody\ForumBundle\Model\CategoryInterface;
+use Rhapsody\SocialBundle\Model\CategoryInterface;
+use Rhapsody\SocialBundle\Model\TopicInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -56,12 +52,12 @@ class TopicController extends Controller
 	 * @param Request The Request.
 	 * @return Response the Response.
 	 */
-	public function createAction(Category $category = null)
+	public function createAction(Request $request)
 	{
 		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\ForumDelegate */
 		$delegate = $this->get('rhapsody.forum.controller.delegate.topic_delegate');
 
-		/** @var $delegate \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
 		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
 
 		$forum = $forumManager->findById($request->attributes->get('forum'));
@@ -76,9 +72,14 @@ class TopicController extends Controller
 	 */
 	public function deleteAction(Request $request)
 	{
-		/** @var $topicManager \Rhapsody\ForumBundle\Doctrine\TopicManagerInterface	 */
+		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface	 */
 		$topicManager = $this->get('rhapsody.forum.doctrine.topic_manager');
 
+		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
+
+		/** @var $forum \Rhapsody\ForumBundle\Model\ForumInterface */
+		$forum = $forumManager->findById($request->attributes->get('forum'));
 		$response = $delegate->deleteAction($request, $forum, $request->attributes->get('topic'));
 		return $response->render();
 	}
@@ -96,9 +97,10 @@ class TopicController extends Controller
 		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\ForumDelegate */
 		$delegate = $this->get('rhapsody.forum.controller.delegate.topic_delegate');
 
-		/** @var $delegate \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
 		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
 
+		/** @var $forum \Rhapsody\ForumBundle\Model\ForumInterface */
 		$forum = $forumManager->findById($request->attributes->get('forum'));
 		$response = $delegate->listAction($request, $forum);
 		return $response->render();
@@ -128,7 +130,7 @@ class TopicController extends Controller
 	 */
 	public function newAction(Request $request)
 	{
-		/** @var $topicManager \Rhapsody\ForumBundle\Doctrine\TopicManagerInterface */
+		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
 		$topicManager = $this->get('rhapsody.forum.doctrine.topic_manager');
 
 		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
@@ -137,10 +139,10 @@ class TopicController extends Controller
 		/** @var $forum \Rhapsody\ForumBundle\Model\ForumInterface */
 		$forum = null;
 
-		/** @var $category \Rhapsody\ForumBundle\Model\CategoryInterface */
+		/** @var $category \Rhapsody\SocialBundle\Model\CategoryInterface */
 		$category = null;
 
-		/** @var $category \Rhapsody\ForumBundle\Model\TopicInterface */
+		/** @var $category \Rhapsody\SocialBundle\Model\TopicInterface */
 		$topic = $topicManager->newTopic($forum, $category);
 		$form = $formFactory->createForm();
 		$form->setData($topic);

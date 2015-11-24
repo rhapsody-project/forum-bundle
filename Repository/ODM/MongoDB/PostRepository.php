@@ -28,9 +28,9 @@
 namespace Rhapsody\ForumBundle\Repository\ODM\MongoDB;
 
 use Doctrine\ODM\MongoDB\DocumentRepository;
-use Rhapsody\ForumBundle\Repository\PostRepositoryInterface;
-use Rhapsody\ForumBundle\Model\TopicInterface;
-use Rhapsody\ForumBundle\Model\PostInterface;
+use Rhapsody\SocialBundle\Repository\PostRepositoryInterface;
+use Rhapsody\SocialBundle\Model\TopicInterface;
+use Rhapsody\SocialBundle\Model\PostInterface;
 
 /**
  *
@@ -47,7 +47,7 @@ class PostRepository extends DocumentRepository implements PostRepositoryInterfa
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findAllByTopic()
+	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findAllByTopic()
 	 */
 	public function findAllByTopic($topic)
 	{
@@ -60,7 +60,7 @@ class PostRepository extends DocumentRepository implements PostRepositoryInterfa
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findById()
+	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findById()
 	 */
 	public function findById($id)
 	{
@@ -80,7 +80,7 @@ class PostRepository extends DocumentRepository implements PostRepositoryInterfa
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findOneById()
+	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
 	 */
 	public function findRecentByTopic($topic, $number)
 	{
@@ -94,7 +94,7 @@ class PostRepository extends DocumentRepository implements PostRepositoryInterfa
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findAllByTopic()
+	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findAllByTopic()
 	 */
 	public function getPostCountByTopic($topic)
 	{
@@ -106,7 +106,7 @@ class PostRepository extends DocumentRepository implements PostRepositoryInterfa
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::search()
+	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::search()
 	 */
 	public function search($query)
 	{
@@ -120,7 +120,7 @@ class PostRepository extends DocumentRepository implements PostRepositoryInterfa
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findOneById()
+	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
 	 */
 	public function getPostBefore($post)
 	{
@@ -128,7 +128,7 @@ class PostRepository extends DocumentRepository implements PostRepositoryInterfa
 
 	/**
 	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Repository\PostRepositoryInterface::findOneById()
+	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
 	 */
 	public function createNewPost()
 	{

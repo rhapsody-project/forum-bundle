@@ -1,5 +1,5 @@
 <?php
-/* Copyright (c) 2013 Rhapsody Project
+/* Copyright (c) 2015 Rhapsody Project
  *
  * Licensed under the MIT License (http://opensource.org/licenses/MIT)
  *
@@ -25,55 +25,30 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-namespace Rhapsody\ForumBundle\Model;
+namespace Rhapsody\ForumBundle\Factory;
 
+use Rhapsody\SocialBundle\Factory\TemplateFactoryInterface;
 /**
  *
  * @author    Sean W. Quinn
  * @category  Rhapsody ForumBundle
- * @package   Rhapsody\ForumBundle\Model
+ * @package   Rhapsody\ForumBundle\Factory
  * @copyright Copyright (c) 2013 Rhapsody Project
  * @license   http://opensource.org/licenses/MIT
  * @version   $Id$
  * @since     1.0
  */
-class Search implements SearchInterface
+class TemplateFactory implements TemplateFactoryInterface
 {
 
-	/**
-	 * The search query.
-	 * @var string
-	 * @access protected
-	 */
-	protected $query;
+  /**
+   * (non-PHPDoc)
+   * @see \Rhapsody\SocialBundle\Factory\TemplateFactoryInterface::getTopicReplyEmailTemplate()
+   */
+  public function getTopicReplyEmailTemplate()
+  {
+  	return 'RhapsodyForumBundle:Mail:topic_reply_email.txt.twig';
+  }
 
-	/**
-	 * Constructor for the search model.
-	 */
-	public function __construct()
-	{
-		// Empty.
-	}
 
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\ForumBundle\Model\SearchInterface::getQuery()
-	 */
-	public function getQuery()
-	{
-		return $this->query;
-	}
-
-	/**
-	 * Sets the query for the search and returns a reference to the search object
-	 * for fluent chaining.
-	 *
-	 * @param string $query the query.
-	 * @return \Rhapsody\ForumBundle\Model\Search this model.
-	 */
-	public function setQuery($query)
-	{
-		$this->query = $query;
-		return $this;
-	}
 }
