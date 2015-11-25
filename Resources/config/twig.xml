@@ -22,6 +22,8 @@
             <argument type="service" id="mailer" />
             <argument type="service" id="router" />
             <argument type="service" id="twig" />
+            <argument>%rhapsody_forum.mail.sender_email%</argument>
+            <argument>%rhapsody_forum.mail.sender_name%</argument>
         </service>
         
 		<service id="rhapsody.forum.twig.template.activity.post_template" class="Rhapsody\CommonsBundle\Twig\TwigManagedTemplate">

@@ -90,6 +90,7 @@ class Configuration implements ConfigurationInterface
         ;
 
         $this->addForumFormSection($rootNode);
+        $this->addMailSection($rootNode);
         $this->addPostFormSection($rootNode);
         $this->addTopicFormSection($rootNode);
         return $treeBuilder;
@@ -118,6 +119,27 @@ class Configuration implements ConfigurationInterface
               ->end()
           ->end()
       ;
+    }
+
+    /**
+     * Adds the <code>mail</code> section to the Rhapsody ForumBundle
+     * configuration.
+     *
+     * @param ArrayNodeDefinition $node the root node.
+     */
+    private function addMailSection(ArrayNodeDefinition $node)
+    {
+    	$node->children()
+    		->arrayNode('mail')
+    			->addDefaultsIfNotSet()
+    			->canBeUnset()
+    			->children()
+    				->scalarNode('sender_email')->isRequired()->cannotBeEmpty()->end()
+    				->scalarNode('sender_name')->isRequired()->cannotBeEmpty()->end()
+    			->end()
+    		->end()
+	    ->end()
+    	;
     }
 
     private function addPostFormSection(ArrayNodeDefinition $node)
