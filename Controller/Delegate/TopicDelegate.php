@@ -71,7 +71,7 @@ class TopicDelegate extends Delegate
 		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
 		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
 
-		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
+		/** @var $formFactory \Rhapsody\SocialBundle\Form\Factory\FactoryInterface */
 		$formFactory = $this->container->get('rhapsody_forum.topic.form.factory');
 
 		/** @var $user \Symfony\Component\Security\Core\User\UserInterface */
@@ -185,7 +185,7 @@ class TopicDelegate extends Delegate
 		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
 		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
 
-		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
+		/** @var $formFactory \Rhapsody\SocialBundle\Form\Factory\FactoryInterface */
 		$formFactory = $this->container->get('rhapsody_forum.topic.form.factory');
 
 		/** @var $topic \Rhapsody\SocialBundle\Model\TopicInterface */
@@ -212,7 +212,7 @@ class TopicDelegate extends Delegate
 		/** @var $postManager \Rhapsody\ForumBundle\Doctrine\PostManagerInterface */
 		$postManager = $this->container->get('rhapsody.forum.doctrine.post_manager');
 
-		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
+		/** @var $formFactory \Rhapsody\SocialBundle\Form\Factory\FactoryInterface */
 		$formFactory = $this->container->get('rhapsody_forum.post.form.factory');
 
 		/** @var $post \Rhapsody\SocialBundle\Model\PostInterface */

@@ -133,7 +133,7 @@ class TopicController extends Controller
 		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
 		$topicManager = $this->get('rhapsody.forum.doctrine.topic_manager');
 
-		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
+		/** @var $formFactory \Rhapsody\SocialBundle\Form\Factory\FactoryInterface */
 		$formFactory = $this->get('rhapsody_forum.topic.form.factory');
 
 		/** @var $forum \Rhapsody\ForumBundle\Model\ForumInterface */

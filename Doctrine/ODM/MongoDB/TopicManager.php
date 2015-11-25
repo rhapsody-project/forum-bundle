@@ -33,6 +33,7 @@ use Rhapsody\SocialBundle\Doctrine\ODM\MongoDB\TopicManager as BaseTopicManager;
 use Rhapsody\SocialBundle\Doctrine\PostManagerInterface;
 use Rhapsody\SocialBundle\Factory\BuilderFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Rhapsody\SocialBundle\Form\Factory\FactoryInterface;
 
 /**
  *
@@ -51,9 +52,15 @@ class TopicManager extends BaseTopicManager
 	 * (non-PHPDoc)
 	 * @see Rhapsody\SocialBundle\Doctrine\TopicManager::__construct()
 	 */
-	public function __construct(ObjectManager $objectManager, EventDispatcherInterface $eventDispatcher, BuilderFactoryInterface $builderFactory, PostManagerInterface $postManager, $class)
+	public function __construct(
+			ObjectManager $objectManager,
+			EventDispatcherInterface $eventDispatcher,
+			BuilderFactoryInterface $builderFactory,
+			FactoryInterface $formFactory,
+			PostManagerInterface $postManager,
+			$class)
 	{
-		parent::__construct($objectManager, $eventDispatcher, $builderFactory, $postManager, $class);
+		parent::__construct($objectManager, $eventDispatcher, $builderFactory, $formFactory, $postManager, $class);
 		$this->logger = new Logger(get_class($this));
 	}
 

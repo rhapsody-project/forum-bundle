@@ -29,11 +29,10 @@ namespace Rhapsody\ForumBundle\Doctrine\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Monolog\Logger;
-use Rhapsody\SocialBundle\Doctrine\PostManager as BasePostManager;
+use Rhapsody\SocialBundle\Doctrine\ORM\PostManager as BasePostManager;
 use Rhapsody\SocialBundle\Factory\BuilderFactoryInterface;
-use Rhapsody\SocialBundle\Model\PostInterface;
+use Rhapsody\SocialBundle\Form\Factory\FactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Rhapsody\SocialBundle\Doctrine\PostManager;
 
 /**
  *
@@ -48,7 +47,12 @@ use Rhapsody\SocialBundle\Doctrine\PostManager;
 class PostManager extends BasePostManager
 {
 
-	public function __construct(ObjectManager $objectManager, EventDispatcherInterface $eventDispatcher, BuilderFactoryInterface $builderFactory, $class)
+	public function __construct(
+			ObjectManager $objectManager,
+			EventDispatcherInterface $eventDispatcher,
+			BuilderFactoryInterface $builderFactory,
+			FactoryInterface $formFactory,
+			$class)
 	{
 		parent::__construct($objectManager, $eventDispatcher, $builderFactory, $class);
 

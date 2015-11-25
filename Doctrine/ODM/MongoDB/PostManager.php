@@ -31,8 +31,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Monolog\Logger;
 use Rhapsody\SocialBundle\Doctrine\ODM\MongoDB\PostManager as BasePostManager;
 use Rhapsody\SocialBundle\Factory\BuilderFactoryInterface;
-use Rhapsody\SocialBundle\Model\PostInterface;
-use Rhapsody\SocialBundle\Model\TopicInterface;
+use Rhapsody\SocialBundle\Form\Factory\FactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -52,9 +51,14 @@ class PostManager extends BasePostManager
 	 * (non-PHPDoc)
 	 * @see Rhapsody\SocialBundle\Doctrine\PostManager::__construct()
 	 */
-	public function __construct(ObjectManager $objectManager, EventDispatcherInterface $eventDispatcher, BuilderFactoryInterface $builderFactory, $class)
+	public function __construct(
+			ObjectManager $objectManager,
+			EventDispatcherInterface $eventDispatcher,
+			BuilderFactoryInterface $builderFactory,
+			FactoryInterface $formFactory,
+			$class)
 	{
-		parent::__construct($objectManager, $eventDispatcher, $builderFactory, $class);
+		parent::__construct($objectManager, $eventDispatcher, $builderFactory, $formFactory, $class);
 
 		$this->logger = new Logger(get_class($this));
 	}

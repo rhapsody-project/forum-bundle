@@ -57,7 +57,7 @@ class ForumDelegate extends Delegate
 		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
 		$forumManager = $this->container->get('rhapsody.forum.doctrine.forum_manager');
 
-		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
+		/** @var $formFactory \Rhapsody\SocialBundle\Form\Factory\FactoryInterface */
 		$formFactory = $this->container->get('rhapsody_forum.forum.form.factory');
 
 		/** @var $forum \Rhapsody\ForumBundle\Model\ForumInterface */
@@ -96,7 +96,7 @@ class ForumDelegate extends Delegate
 		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
 		$forumManager = $this->container->get('rhapsody.forum.doctrine.forum_manager');
 
-		/** @var $formFactory \Rhapsody\ForumBundle\Form\Factory\FactoryInterface */
+		/** @var $formFactory \Rhapsody\SocialBundle\Form\Factory\FactoryInterface */
 		$formFactory = $this->container->get('rhapsody_forum.forum.form.factory');
 
 		/** @var $forum \Rhapsody\ForumBundle\Model\ForumInterface */
