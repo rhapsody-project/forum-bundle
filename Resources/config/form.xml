@@ -5,11 +5,11 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-      <parameter key="rhapsody.forum.form.factory.form_factory.class">Rhapsody\ForumBundle\Form\Factory\FormFactory</parameter>
+      <parameter key="rhapsody.social.form.factory.form_factory.class">Rhapsody\SocialBundle\Form\Factory\FormFactory</parameter>
 		</parameters>
 
     <services>
-      <service id="rhapsody_forum.forum.form.factory" class="%rhapsody.forum.form.factory.form_factory.class%">
+      <service id="rhapsody_forum.forum.form.factory" class="%rhapsody.social.form.factory.form_factory.class%">
         <argument type="service" id="form.factory" />
         <argument>%rhapsody_forum.forum.form.name%</argument>
         <argument>%rhapsody_forum.forum.form.type%</argument>
@@ -22,7 +22,7 @@
         <argument>%rhapsody_forum.model.forum.class%</argument>
       </service>
 
-      <service id="rhapsody_forum.post.form.factory" class="%rhapsody.forum.form.factory.form_factory.class%">
+      <service id="rhapsody_forum.post.form.factory" class="%rhapsody.social.form.factory.form_factory.class%">
         <argument type="service" id="form.factory" />
         <argument>%rhapsody_forum.post.form.name%</argument>
         <argument>%rhapsody_forum.post.form.type%</argument>
@@ -35,7 +35,7 @@
         <argument>%rhapsody_forum.model.post.class%</argument>
       </service>
 
-      <service id="rhapsody_forum.topic.form.factory" class="%rhapsody.forum.form.factory.form_factory.class%">
+      <service id="rhapsody_forum.topic.form.factory" class="%rhapsody.social.form.factory.form_factory.class%">
         <argument type="service" id="form.factory" />
         <argument>%rhapsody_forum.topic.form.name%</argument>
         <argument>%rhapsody_forum.topic.form.type%</argument>
