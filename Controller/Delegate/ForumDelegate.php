@@ -34,6 +34,7 @@ use Rhapsody\ForumBundle\Model\Search;
 use Rhapsody\RestBundle\HttpFoundation\Controller\Delegate;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Rhapsody\ForumBundle\Model\ForumInterface;
 
 /**
  *
@@ -91,6 +92,24 @@ class ForumDelegate extends Delegate
 	 *
 	 * @return ResponseBuilderInterface the response builder.
 	 */
+	public function listAction(Request $request)
+	{
+		/** @var $delegate \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
+
+		$forums = $forumManager->findAll();
+
+		$view = View::create(array('forums' => $forums))
+			->setFormat($request->getRequestFormat('html'))
+			->setTemplate('RhapsodyForumBundle:Forum:list.html.twig');
+		$response = $this->createResponseBuilder($view);
+		return array($forums, $response);
+	}
+
+	/**
+	 *
+	 * @return ResponseBuilderInterface the response builder.
+	 */
 	public function newAction(Request $request)
 	{
 		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
@@ -138,4 +157,18 @@ class ForumDelegate extends Delegate
 		return $this->container->get('fos_rest.view_handler')->handle($view);
 	}
 
+	/**
+	 *
+	 * @return ResponseBuilderInterface the response builder.
+	 */
+	public function viewAction(Request $request, ForumInterface $forum)
+	{
+		$page = $request->query->get('page', 1);
+
+		$view = View::create(array('forum' => $forum, 'page' => $page))
+			->setFormat($request->getRequestFormat('html'))
+			->setTemplate('RhapsodyForumBundle:Forum:view.html.twig');
+		$response = $this->createResponseBuilder($view);
+		return array($forum, $response);
+	}
 }

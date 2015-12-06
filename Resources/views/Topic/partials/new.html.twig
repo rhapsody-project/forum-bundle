@@ -26,9 +26,20 @@
  #}
 {% trans_default_domain "RhapsodyForumBundle" %}
 
-{% extends 'RhapsodyForumBundle::layout.html.twig' %}
-{% block title %}Simple forum bundle for Symfony{% endblock %}
-
-{% block content %}
-	{% include 'RhapsodyForumBundle:Topic:partials/reply.html.twig' %}
-{% endblock %}
+<div class="forum topic_new">
+  <div class="row">
+    <ul class="breadcrumb list-inline">
+        <li><a href="{{ rhapsody_forum_index_url() }}">Forum</a></li>
+        <li><a href="{{ rhapsody_forum_url(forum) }}">{{ forum.name }}</a></li>
+        <li>New Topic</li>
+    </ul>
+  </div>
+  <div class="main">
+      <h2>New Topic</h2>
+      <form action="{{ rhapsody_forum_topic_create_url(forum) }}" method="post">
+          {{ form_widget(form) }}
+          <button type="submit" name="create">Create topic</button>
+          <span><a href="{{ rhapsody_forum_url(forum) }}">Cancel</a></span>
+      </form>
+  </div>
+</div>

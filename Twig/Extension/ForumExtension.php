@@ -105,6 +105,7 @@ class ForumExtension extends \Twig_Extension
 	public function getFunctions()
 	{
 		return array(
+
 			new \Twig_SimpleFunction('rhapsody_forum_category_class',
 				array($this, 'getCategoryClass'),
 				array('is_safe' => array('html'))
@@ -122,6 +123,11 @@ class ForumExtension extends \Twig_Extension
 
 			new \Twig_SimpleFunction('rhapsody_forum_url',
 				array($this, 'getForumUrl'),
+				array('is_safe' => array('html'))
+			),
+
+			new \Twig_SimpleFunction('rhapsody_forum_index_url',
+				array($this, 'getForumIndexUrl'),
 				array('is_safe' => array('html'))
 			),
 
@@ -150,6 +156,11 @@ class ForumExtension extends \Twig_Extension
 				array('is_safe' => array('html'))
 			),
 
+			new \Twig_SimpleFunction('rhapsody_forum_topic_url',
+				array($this, 'getTopicUrl'),
+				array('is_safe' => array('html'))
+			),
+
 			new \Twig_SimpleFunction('rhapsody_forum_topic_atom_feed_url',
 				array($this, 'getAtomFeedUrlForTopic'),
 				array('is_safe' => array('html'))
@@ -160,8 +171,8 @@ class ForumExtension extends \Twig_Extension
 				array('is_safe' => array('html'))
 			),
 
-			new \Twig_SimpleFunction('rhapsody_forum_topic_url',
-				array($this, 'getTopicUrl'),
+			new \Twig_SimpleFunction('rhapsody_forum_topic_new_url',
+				array($this, 'getTopicNewUrl'),
 				array('is_safe' => array('html'))
 			),
 
@@ -202,30 +213,55 @@ class ForumExtension extends \Twig_Extension
 		if ($category !== null) {
 			$params['category'] = $category->getSlug();
 		}
-		return $this->routeTranslator->translate('rhapsody_forum_index', $params, $this->getRoutingContext());
+		return $this->routeTranslator->translate('rhapsody_forum_view', $params, $this->getRoutingContext());
+	}
+
+	public function getForumIndexUrl()
+	{
+		return $this->routeTranslator->translate('rhapsody_forum', array(), $this->getRoutingContext());
 	}
 
 	public function getPostCreateUrl($topic)
 	{
-		$params = array('topic' => $topic->getId());
+		$forum = $topic->getSocialContext();
+
+		$params = array('forum' => $forum->getId(), 'topic' => $topic->getId());
 		return $this->routeTranslator->translate('rhapsody_forum_post_create', $params, $this->getRoutingContext());
 	}
 
 	public function getPostDeleteUrl($post)
 	{
-		$params = array('post' => $post->getId());
+		$forum  = $post->getSocialContext();
+		$topic  = $post->getTopic();
+		$params = array(
+			'forum' => $forum->getId(),
+			'topic' => $topic->getId(),
+			'post'  => $post->getId()
+		);
 		return $this->routeTranslator->translate('rhapsody_forum_post_delete', $params, $this->getRoutingContext());
 	}
 
 	public function getPostEditUrl($post)
 	{
-		$params = array('post' => $post->getId());
+		$forum  = $post->getSocialContext();
+		$topic  = $post->getTopic();
+		$params = array(
+			'forum' => $forum->getId(),
+			'topic' => $topic->getId(),
+			'post'  => $post->getId()
+		);
 		return $this->routeTranslator->translate('rhapsody_forum_post_edit', $params, $this->getRoutingContext());
 	}
 
 	public function getPostSaveUrl($post)
 	{
-		$params = array('post' => $post->getId());
+		$forum  = $post->getSocialContext();
+		$topic  = $post->getTopic();
+		$params = array(
+			'forum' => $forum->getId(),
+			'topic' => $topic->getId(),
+			'post'  => $post->getId()
+		);
 		return $this->routeTranslator->translate('rhapsody_forum_post_save', $params, $this->getRoutingContext());
 	}
 
@@ -234,10 +270,15 @@ class ForumExtension extends \Twig_Extension
 		/** @var $postManager \Rhapsody\ForumBundle\Doctrine\PostManagerInterface */
 		$postManager = $this->container->get('rhapsody.forum.doctrine.post_manager');
 
+		$forum = $post->getSocialContext();
 		$topic = $post->getTopic();
 		$page = $postManager->findPageByTopicAndPost($topic, $post);
 
-		$params = array('topic' => $topic->getId(), 'page' => $page);
+		$params = array(
+			'forum' => $forum->getId(),
+			'topic' => $topic->getId(),
+			'page' => $page
+		);
 		$url = $this->routeTranslator->translate('rhapsody_forum_topic_view', $params, $this->getRoutingContext());
 		return $url.'#post-'.$post->id;
 	}
@@ -250,7 +291,8 @@ class ForumExtension extends \Twig_Extension
 
 	public function getTopicUrl($topic, $page = null)
 	{
-		$params = array('topic' => $topic->getId());
+		$forum  = $topic->getSocialContext();
+		$params = array('forum' => $forum->getId(), 'topic' => $topic->getId());
 		if ($page !== null) {
 			$params['page'] = $page;
 		}
@@ -264,16 +306,28 @@ class ForumExtension extends \Twig_Extension
 		return $this->routeTranslator->translate('rhapsody_forum_topic_create', $params, $this->getRoutingContext());
 	}
 
+	public function getTopicNewUrl($forum, $category = null)
+	{
+		$params = array('forum' => $forum->getId());
+		return $this->routeTranslator->translate('rhapsody_forum_topic_new', $params, $this->getRoutingContext());
+	}
+
 	public function getTopicReplyUrl($topic, $options = array())
 	{
-		$params = array('topic' => $topic->getId());
+		$forum  = $topic->getSocialContext();
+		$params = array('forum' => $forum->getId(), 'topic' => $topic->getId());
 		// TODO: Include post for quoting exercise...
 		return $this->routeTranslator->translate('rhapsody_forum_topic_reply', $params, $this->getRoutingContext());
 	}
 
 	public function getTopicUserUrl($topic, $user)
 	{
-		$params = array('topic' => $topic->getId(), 'u' => $user->getUsername());
+		$forum = $topic->getSocialContext();
+		$params = array(
+			'forum' => $forum->getId(),
+			'topic' => $topic->getId(),
+			'u' => $user->getUsername()
+		);
 		return $this->routeTranslator->translate('rhapsody_forum_topic_view', $params, $this->getRoutingContext());
 	}
 

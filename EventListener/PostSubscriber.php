@@ -54,7 +54,12 @@ class PostSubscriber extends BasePostSubscriber
 	 * @param UrlGeneratorInterface $router
 	 * @param SessionInterface $session
 	 */
-	public function __construct(MailerInterface $mailer, UrlGeneratorInterface $router, SessionInterface $session, PostManagerInterface $postManager, TemplateFactoryInterface $templateFactory)
+	public function __construct(
+			MailerInterface $mailer,
+			UrlGeneratorInterface $router,
+			SessionInterface $session,
+			TemplateFactoryInterface $templateFactory,
+			PostManagerInterface $postManager)
 	{
 		parent::__construct($mailer, $router, $session, $postManager, $templateFactory);
 	}

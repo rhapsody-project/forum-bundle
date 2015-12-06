@@ -5,7 +5,7 @@
 		xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
 				http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-		<mapped-superclass name="Rhapsody\ForumBundle\Entity\PostRevision" tabke="forum_post_revision"
+		<document name="Rhapsody\ForumBundle\Entity\PostRevision" tabke="forum_post_revision"
 				repository-class="Rhapsody\ForumBundle\Repository\ORM\PostRevisionRepository">
 
         <id name="id" type="integer" column="id">
@@ -16,6 +16,6 @@
         <field name="comment" fieldName="comment" type="string" />
         <field name="created" fieldName="created" type="date" />
 
-    </mapped-superclass>
+    </document>
 
 </doctrine-mapping>

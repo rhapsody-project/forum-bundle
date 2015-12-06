@@ -5,13 +5,13 @@
 		xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
 				http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-		<mapped-superclass name="Rhapsody\ForumBundle\Entity\Topic" tabke="forum_topic"
+		<document name="Rhapsody\ForumBundle\Entity\Topic" tabke="forum_topic"
 				repository-class="Rhapsody\ForumBundle\Repository\ORM\TopicRepository">
 
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO" />
         </id>
 
-    </mapped-superclass>
+    </document>
 
 </doctrine-mapping>

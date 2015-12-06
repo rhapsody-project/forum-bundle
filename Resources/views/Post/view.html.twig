@@ -26,85 +26,9 @@
  #}
 {% trans_default_domain "RhapsodyForumBundle" %}
 
-{% set author = post.author %}
-{% set timestamp = post.created is empty ? '' : post.created.getTimestamp() %}
+{% extends 'RhapsodyForumBundle::layout.html.twig' %}
+{% block title %}Simple forum bundle for Symfony{% endblock %}
 
-<article id="post-{{ post.id }}" data-post-id="{{ post.id }}" data-user-id="{{ author.id|default('unknown-user') }}" class="post boxed">
-  <div class="row">
-    <div class="col-sm-2 hidden-xs pull-right post-author">
-      <div class="author-avatar">
-        <a data-user-card="{{ author.username|lower }}" classnames="trigger-user-card main-avatar" href="{{ rhapsody_forum_user_url(author) }}">
-          {{ rhapsody_avatar(author, { 'size': 'md-avatar' }) }}
-        </a>
-      </div>
-      <div class="author-details post-metadata">
-        <div class="names trigger-user-card">
-          <span class="username"> {# staff, admin? #}
-            <a data-user-card="{{ author.username|lower }}" data-auto-route="true" href="{{ rhapsody_forum_user_url(author) }}">{{ author.username }}</a>
-          </span>
-        </div>
-        <div class="post-info">
-          <a href="{{ rhapsody_forum_topic_user_url(post.topic, author) }}" data-share-url="{{ rhapsody_forum_topic_user_url(post.topic, author) }}" data-post-number="{{ index }}" class="post-date">
-            <span data-format="tiny" data-time="{{ timestamp }}" title="{{ timestamp|date('F j, Y g:ia') }}" class="relative-date with-year">{{ timestamp|date('M j, \'y') }}</span>
-          </a>
-        </div>
-        {% if post.editCount > 0 %}
-        <div class="post-info edits">
-          <a title="{{ 'rhapsody.forum.post.last_edited_on'|trans({ '%date%': timestamp|date('F j, Y g:ia') }) }}" class="" href="">
-            {{ post.editCount }}
-            <span class="glyphicons glyphicons-pencil"></span>
-          </a>
-        </div>
-        {% endif %}
-        <div title="Post is unread" class="read-state read"><i class="fa fa-circle"></i></div>
-      </div>
-    </div>
-
-    <div class="col-sm-10 col-xs-12 post-body">
-      <div class="post-heading clearfix">
-        {% if post.subject is not empty %}<div class="post-subject"><span>{{ post.subject }}</span></div>{% endif %}
-        <div class="post-byline pull-left">
-          <span class="post-icon glyphicons glyphicons-file"></span>by <a href="{{ rhapsody_forum_user_url(author) }}">{{ author.username }}</a> on {{ post.created|date('M j, Y \\a\\t H:i') }}
-        </div>
-        <div class="hidden-xs pull-right">
-          <section class="post-actions">
-            <ul class="list-inline">
-              <li>
-                <a href="{{ rhapsody_forum_post_url(post) }}" data-action="share" data-post-number="{{ index }}" data-share-url="{{ rhapsody_forum_topic_user_url(post.topic, author) }}" title="{{ 'rahpsody.forum.post.share_title'|trans }}">
-                  <span class="post-icon glyphicons glyphicons-link"></span>{{ 'rhapsody.forum.misc.share'|trans }}
-                </a>
-              </li>
-              <li>
-                <a data-action="flag" title="{{ 'rhapsody.forum.post.flag_title'|trans }}">
-                  <span class="post-icon glyphicons glyphicons-warning-sign"></span>{{ 'rhapsody.forum.misc.flag'|trans }}
-                </a>
-              </li>
-              <li>
-                <a href="{{ rhapsody_forum_post_edit_url(post) }}" data-action="edit" title="{{ 'rhapsody.forum.post.edit_title'|trans }}">
-                  <span class="post-icon glyphicons glyphicons-pencil"></span>{{ 'rhapsody.forum.misc.edit'|trans }}
-                </a>
-              </li>
-              <li>
-                <a href="{{ rhapsody_forum_topic_reply_url(post.topic, { 'post': post.id }) }}" data-action="edit" title="{{ 'rhapsody.forum.post.quote_title'|trans }}">
-                  <span class="post-icon glyphicons glyphicons-quote"></span>{{ 'rhapsody.forum.misc.quote'|trans }}
-                </a>
-              </li>
-            </ul>
-          </section>
-        </div>
-      </div>
-
-      <div class="select-posts hidden">
-        <button class="hidden">select +replies</button>
-        <button class="select-post">select</button>
-      </div>
-
-      <!-- keep the classes here in sync with composer.hbs -->
-      <div class="contents regular">
-        <div class="cooked">
-        	{{ rhapsody_forum_format_text(post.text) }}
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
+{% block content %}
+	{% include 'RhapsodyForumBundle:Post:partials/view.html.twig' %}
+{% endblock %}

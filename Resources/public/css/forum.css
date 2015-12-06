@@ -1,4 +1,7 @@
 @import url("topic.css");
 @import url("post.css");
 
+.forum { margin-top: 25px; }
+.forum .breadcrumbs { margin-left: 15px; margin-right: 15px; margin-bottom: 30px; }
+ 
 a.simple, a.simple:hover { text-decoration: none; }

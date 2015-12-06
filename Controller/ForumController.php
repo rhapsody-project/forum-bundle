@@ -28,12 +28,10 @@
 namespace Rhapsody\ForumBundle\Controller;
 
 use FOS\RestBundle\View\View;
-use JMS\Serializer\SerializationContext;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Rhapsody\ForumBundle\Form\Type\SearchType;
 use Rhapsody\ForumBundle\Model\Search;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  *
@@ -69,14 +67,23 @@ class ForumController extends Controller
 	 */
 	public function indexAction(Request $request)
 	{
+		$view = View::create()
+			->setFormat($request->getRequestFormat('html'))
+			->setTemplate('RhapsodyForumBundle:Forum:index.html.twig');
+		return $this->get('fos_rest.view_handler')->handle($view);
+	}
+
+	/**
+	 *
+	 * @param Request The Request.
+	 * @return Response the Response.
+	 */
+	public function listAction(Request $request)
+	{
 		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\ForumDelegate */
 		$delegate = $this->container->get('rhapsody.forum.controller.delegate.forum_delegate');
 
-		/** @var $delegate \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
-		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
-
-		$forum = $forumManager->findById($request->attributes->get('forum'));
-		$response = $delegate->indexAction($request, $forum);
+		list($forums, $response) = $delegate->listAction($request);
 		return $response->render();
 	}
 
@@ -123,6 +130,24 @@ class ForumController extends Controller
 			->setFormat($request->getRequestFormat('html'))
 			->setTemplate('RhapsodyForumBundle:Forum:search.html.twig');
 		return $this->get('fos_rest.view_handler')->handle($view);
+	}
+
+	/**
+	 *
+	 * @param Request The Request.
+	 * @return Response the Response.
+	 */
+	public function viewAction(Request $request)
+	{
+		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\ForumDelegate */
+		$delegate = $this->container->get('rhapsody.forum.controller.delegate.forum_delegate');
+
+		/** @var $delegate \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
+
+		$forum = $forumManager->findById($request->attributes->get('forum'));
+		list($forum, $response) = $delegate->viewAction($request, $forum);
+		return $response->render();
 	}
 
 }

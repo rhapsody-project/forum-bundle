@@ -4,25 +4,29 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-	<route id="rhapsody_forum_topic_create" path="/t/create" methods="POST">
+	<route id="rhapsody_forum_topic_create" path="/{forum}/topics" methods="POST">
 		<default key="_controller">RhapsodyForumBundle:Topic:create</default>
 	</route>
 
-	<route id="rhapsody_forum_topic_delete" path="/t/{topic}/delete" methods="DELETE,POST">
+	<route id="rhapsody_forum_topic_delete" path="/{forum}/topics/{topic}" methods="DELETE">
 		<default key="_controller">RhapsodyForumBundle:Topic:delete</default>
 		<requirement key="id">\w+</requirement>
 	</route>
+	
+	<route id="rhapsody_forum_topic_list" path="/{forum}/topics" methods="GET">
+		<default key="_controller">RhapsodyForumBundle:Topic:list</default>
+	</route>
 
-	<route id="rhapsody_forum_topic_new" path="/t/new" methods="POST">
+	<route id="rhapsody_forum_topic_new" path="/{forum}/topics/new" methods="GET">
 		<default key="_controller">RhapsodyForumBundle:Topic:new</default>
 	</route>
 
-	<route id="rhapsody_forum_topic_reply" path="/t/{topic}/reply.{_format}" methods="GET">
+	<route id="rhapsody_forum_topic_reply" path="/{forum}/topics/{topic}/reply.{_format}" methods="GET">
 		<default key="_controller">RhapsodyForumBundle:Topic:reply</default>
 		<default key="_format">html</default>
 	</route>
 
-	<route id="rhapsody_forum_topic_view" path="/t/{topic}.{_format}" methods="GET">
+	<route id="rhapsody_forum_topic_view" path="/{forum}/topics/{topic}.{_format}" methods="GET">
 		<default key="_controller">RhapsodyForumBundle:Topic:view</default>
 		<default key="_format">html</default>
 	</route>

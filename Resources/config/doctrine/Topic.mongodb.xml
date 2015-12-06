@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
         http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
-    <mapped-superclass name="Rhapsody\ForumBundle\Document\Topic" collection="rhapsody.forum.topic"
+    <document name="Rhapsody\ForumBundle\Document\Topic" collection="rhapsody.forum.topic"
         repository-class="Rhapsody\ForumBundle\Repository\ODM\MongoDB\TopicRepository">
 
         <field name="id" fieldName="id" id="true" />
@@ -65,6 +65,6 @@
             </index>
         </indexes>
 
-    </mapped-superclass>
+    </document>
 
 </doctrine-mongo-mapping>

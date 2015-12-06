@@ -1,0 +1,82 @@
+{# Copyright (c) 2015 Rhapsody Project
+ #
+ # Licensed under the MIT License (http://opensource.org/licenses/MIT)
+ #
+ # Permission is hereby granted, free of charge, to any
+ # person obtaining a copy of this software and associated
+ # documentation files (the "Software"), to deal in the
+ # Software without restriction, including without limitation
+ # the rights to use, copy, modify, merge, publish,
+ # distribute, sublicense, and/or sell copies of the Software,
+ # and to permit persons to whom the Software is furnished
+ # to do so, subject to the following conditions:
+ #
+ # The above copyright notice and this permission notice
+ # shall be included in all copies or substantial portions of
+ # the Software.
+ #
+ # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+ # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ # PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+ # OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ # OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ #}
+<div class="forum forum_index">
+	<div class="row">
+		<ul class="breadcrumb list-inline">
+			<li><a href="{{ rhapsody_forum_index_url() }}">Forum</a></li>
+			<li><a href="{{ rhapsody_forum_url(forum) }}">{{ forum.name }}</a></li>
+		</ul>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-sm-12">
+			<h2>Forum: {{ forum.name }}</h2>
+			<small>{{ forum.description }}</small>
+		</div>
+	</div>
+	<div class="forum-nav forum-topnav">
+		<nav class="navbar navbar-default">
+			<ul class="nav navbar-nav navbar-left">
+				<li>
+					<div class="input-group">
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-default navbar-btn" title="Follow {{ forum.name }}">
+								<span class="glyphicons glyphicons-star-empty"></span> Follow
+							</button>
+						</div>
+						<span class="form-control" style="margin-top: 8px; margin-bottom: 8px;">
+							<a href="">3</a>
+						</span>
+					</div>
+				</li>
+			</ul>
+			<form class="navbar-form navbar-right">
+				<div class="input-group">
+					<input type="text" class="form-control" placeholder="Search forum...">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="button"><span class="glyphicons glyphicons-search"></span></button>
+					</span>
+				</div>
+			</form>
+		</nav>
+	</div>
+
+	<div class="row">
+		{{ render(controller("RhapsodyForumBundle:Topic:list", { 'forum': forum.id, 'page': page })) }}
+	</div>
+
+	<div class="forum-nav forum-bottomnav">
+		<nav class="navbar navbar-default">
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					<div class="navbar-text" style="margin: 0px 25px;">
+						<a href="{{ rhapsody_forum_topic_new_url(forum) }}" class="btn btn-primary navbar-btn" title="New Topic">New Topic</a>
+					</div>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</div>

@@ -29,12 +29,10 @@ namespace Rhapsody\ForumBundle\Controller\Delegate;
 
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
-use Rhapsody\ForumBundle\Form\Type\SearchType;
+use Rhapsody\ForumBundle\Model\ForumInterface;
 use Rhapsody\RestBundle\HttpFoundation\Controller\Delegate;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\DependencyInjection\ContainerAware;
 
 /**
  *
@@ -65,13 +63,13 @@ class CategoryDelegate extends Delegate
 		return $this->createResponseBuilder($view);
 	}
 
-	public function showAction(Request $request, ForumInterface $forum)
+	public function viewAction(Request $request, ForumInterface $forum)
 	{
 		$page  = $request->query->get('page', 1);
 
 		$view = View::create(array('category' => $category, 'page' => $page))
 			->setFormat($request->getRequestFormat('html'))
-			->setTemplate('RhapsodyForumBundle:Category:show.html.twig');
+			->setTemplate('RhapsodyForumBundle:Category:view.html.twig');
 		return $this->createResponseBuilder($view);
 	}
 

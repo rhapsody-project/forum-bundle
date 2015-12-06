@@ -29,11 +29,16 @@ namespace Rhapsody\ForumBundle\Doctrine\ODM\MongoDB;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Monolog\Logger;
+use Rhapsody\ForumBundle\Model\ForumInterface;
 use Rhapsody\SocialBundle\Doctrine\ODM\MongoDB\TopicManager as BaseTopicManager;
 use Rhapsody\SocialBundle\Doctrine\PostManagerInterface;
+use Rhapsody\SocialBundle\Event\TopicEventBuilder;
 use Rhapsody\SocialBundle\Factory\BuilderFactoryInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Rhapsody\SocialBundle\Form\Factory\FactoryInterface;
+use Rhapsody\SocialBundle\Model\PostInterface;
+use Rhapsody\SocialBundle\Model\TopicInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Rhapsody\ForumBundle\RhapsodyForumEvents;
 
 /**
  *
@@ -64,4 +69,31 @@ class TopicManager extends BaseTopicManager
 		$this->logger = new Logger(get_class($this));
 	}
 
+	public function createTopic(TopicInterface $topic, PostInterface $post, $user)
+	{
+		$topic = parent::createTopic($topic, $post, $user);
+		try {
+			$topicEventBuilder = TopicEventBuilder::create()
+				->setTopic($topic)
+				->setPost($post)
+				->setUser($user);
+			$event = $topicEventBuilder->build();
+			$this->eventDispatcher->dispatch(RhapsodyForumEvents::NEW_TOPIC, $event);
+		}
+		catch (\Exception $ex) {
+			//$this->logger->error("An error occurred while trying ")
+			throw $ex;
+		}
+		return $topic;
+	}
+
+	public function findByForumAndId(ForumInterface $forum, $id)
+	{
+		return $this->repository->findOneByForumAndId($forum, $id);
+	}
+
+	public function getTopicCountByForum(ForumInterface $forum)
+	{
+		return $this->repository->getTopicCountByForum($forum);
+	}
 }

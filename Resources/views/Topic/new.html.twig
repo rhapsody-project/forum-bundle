@@ -1,15 +1,34 @@
-<div class="forum topic_new">
-    <ul class="crumbs">
-        <li><a href="">Forum</a></li>
-        {# <li><a href="{ rhapsody_forum_category_url(topic.category) }">{ topic.category.name|default('Uncategorized') }</a></li> #}
-        <li>New Topic</li>
-    </ul>
-    <div class="main">
-        <h2>New Topic</h2>
-        <form action="{{ rhapsody_forum_topic_create_url(forum, category) }}" method="post">
-            {{ form_widget(form) }}
-            <button type="submit" name="create">Create topic</button>
-            <span><a href="{{ rhapsody_forum_url(forum, category) }}">Cancel</a></span>
-        </form>
-    </div>
-</div>
+{# Copyright (c) 2015 Rhapsody Project
+ #
+ # Licensed under the MIT License (http://opensource.org/licenses/MIT)
+ #
+ # Permission is hereby granted, free of charge, to any
+ # person obtaining a copy of this software and associated
+ # documentation files (the "Software"), to deal in the
+ # Software without restriction, including without limitation
+ # the rights to use, copy, modify, merge, publish,
+ # distribute, sublicense, and/or sell copies of the Software,
+ # and to permit persons to whom the Software is furnished
+ # to do so, subject to the following conditions:
+ #
+ # The above copyright notice and this permission notice
+ # shall be included in all copies or substantial portions of
+ # the Software.
+ #
+ # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY
+ # KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ # WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ # PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS
+ # OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ # OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+ # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ #}
+{% trans_default_domain "RhapsodyForumBundle" %}
+
+{% extends 'RhapsodyForumBundle::layout.html.twig' %}
+{% block title %}Simple forum bundle for Symfony{% endblock %}
+
+{% block content %}
+	{% include 'RhapsodyForumBundle:Topic:partials/new.html.twig' %}
+{% endblock %}

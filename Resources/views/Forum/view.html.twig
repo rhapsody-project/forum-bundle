@@ -24,11 +24,8 @@
  # OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  #}
-{% trans_default_domain "RhapsodyForumBundle" %}
-
 {% extends 'RhapsodyForumBundle::layout.html.twig' %}
 {% block title %}Simple forum bundle for Symfony{% endblock %}
-
 {% block content %}
-	{% include 'RhapsodyForumBundle:Topic:partials/reply.html.twig' %}
+	{% include 'RhapsodyForumBundle:Forum:partials/view.html.twig' %}
 {% endblock %}

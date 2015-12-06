@@ -1,22 +1,14 @@
-ul.posts li.post-item {
-  border-radius: 2px;
-  margin: 10px 15px;
-  padding: 10px 0px;
-}
-ul.posts li.post-item.even { }
-ul.posts li.post-item.odd { }
-ul.posts.show-border li.post-item { border-style: solid; border-width: 1px; }
-ul.posts.show-border li.post-item.even { border-color: #b2b2b2; }
-ul.posts.show-border li.post-item.odd { border-color: #a1abb2; }
+/* CORE */
+.posts .post-item { padding: 0px; margin: 15px; }
+.posts .post-item .post .post-heading { padding: 5px; }
+.posts .post-item .post .post-author { padding: 15px; }
+.posts .post-item .post .post-details .post-body { min-height: 200px; padding: 15px; }
 
+.posts.show-border li.post-item { border-style: solid; border-width: 1px; }
+.posts.show-border li.post-item.even { border-color: #b2b2b2; }
+.posts.show-border li.post-item.odd { border-color: #a1abb2; }
 
-ul.post-list li.post-item.even .post-author.pull-right { border-left: 1px solid #bbb; }
-ul.post-list li.post-item.odd .post-author.pull-right { border-left: 1px solid #aaa; }
-
-article.post .post-heading {
-  font-size: 0.85em;
-  margin-bottom: 10px;
-}
+article.post .post-heading { font-size: 0.85em; }
 
 article.post .post-heading .post-icon {
   cursor: default;
@@ -54,15 +46,36 @@ article.post .post-content .arrow:after {
 }
 article.post .post-content { background-color: #fff; }
 
+/* STRIPED */
+.posts.posts-striped .post-item.even .post .post-details .post-body { background-color: #f2f2f2; }
+.posts.posts-striped .post-item.odd .post .post-details .post-body { background-color: #e1ebf2; }
+
 /* DEFAULT */
-ul.posts.posts-default li.post-item.even { background-color: #f2f2f2; }
-ul.posts.posts-default li.post-item.odd { background-color: #e1ebf2; }
-ul.posts.posts-default li.post-item article.post .post-content { background-color: transparent; }
+.posts.posts-default .post-item { }
+.posts.posts-default .post-item .post .post-heading { background: #B0907A none repeat-x scroll 0% 0%; border: 1px solid #000; }
+.posts.posts-default .post-item .post .post-heading a,
+.posts.posts-default .post-item .post .post-heading a:hover { color: #fff; }
+.posts.posts-default .post-item .post .post-details { background: #F0E7D3 none repeat scroll 0% 0%; }
+.posts.posts-default .post-item .post .post-details .post-body { background-color: #fff; }
+.posts.posts-default .post-item .post .post-content { background-color: transparent; }
+.posts.posts-default .post-item .post .post-author {
+	background: #F0E7D3 none repeat scroll 0% 0%;
+}
+
+/* INVERSE */
+.posts.posts-inverse .post-item { }
+.posts.posts-inverse .post-item .post .post-heading { background: #666 none repeat-x scroll 0% 0%; border: 1px solid #000; }
+.posts.posts-inverse .post-item .post .post-heading a,
+.posts.posts-inverse .post-item .post .post-heading a:hover { color: #fff; }
+.posts.posts-inverse .post-item .post .post-details { background: #999 none repeat scroll 0% 0%; }
+.posts.posts-inverse .post-item .post .post-details .post-body { background-color: #ccc; }
+.posts.posts-inverse .post-item .post .post-content { background-color: transparent; }
+.posts.posts-inverse .post-item .post .post-author {
+	background: #999 none repeat scroll 0% 0%;
+}
 
 /* TIMELINE */
-ul.posts.posts-timeline li.post-item.even { }
-ul.posts.posts-timeline li.post-item.odd { }
-ul.posts.posts-timeline::before {
+.posts.posts-timeline::before {
   display: block;
   content: "";
   position: absolute;
@@ -76,17 +89,17 @@ ul.posts.posts-timeline::before {
   background-color: #dedede;
   z-index: -1;
 }
-ul.posts.posts-timeline::after {
+.posts.posts-timeline::after {
   display: table;
   clear: both;
   content: "";
 }
-ul.posts.posts-timeline li.post-item .post-content { border: 1px solid #aaa; }
-ul.posts.posts-timeline li.post-item .post-heading {
+.posts.posts-timeline .post-item .post-content { border: 1px solid #aaa; }
+.posts.posts-timeline .post-item .post-heading {
   background-color: #dedede;
   padding: 10px;
   margin-left: -15px;
   margin-right:-15px;
 }
-ul.posts.posts-timeline li.post-item .post-content .arrow { border-right-color: #aaa; }
-ul.posts.posts-timeline li.post-item .post-content .arrow:after { border-right-color: #dedede; }
+ul.posts.posts-timeline .post-item .post-content .arrow { border-right-color: #aaa; }
+ul.posts.posts-timeline .post-item .post-content .arrow:after { border-right-color: #dedede; }

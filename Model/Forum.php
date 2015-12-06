@@ -51,6 +51,12 @@ class Forum extends SocialContext implements ForumInterface, ActivitySourceInter
 	protected $description;
 
 	/**
+	 * The last topic posted to the forum.
+	 * @var TopicInterface $lastTopic
+	 */
+	protected $lastTopic;
+
+	/**
 	 * The name of the forum.
 	 * @var string
 	 * @access protected
@@ -72,6 +78,12 @@ class Forum extends SocialContext implements ForumInterface, ActivitySourceInter
 	 * @access protected
 	 */
 	protected $categories = array();
+
+	/**
+	 * The number of topics in the forum.
+	 * @var number $topicCount
+	 */
+	protected $topicCount;
 
 	/**
 	 * Constructor for the forum model.
@@ -100,6 +112,11 @@ class Forum extends SocialContext implements ForumInterface, ActivitySourceInter
 		return $this->description;
 	}
 
+	public function getLastTopic()
+	{
+		return $this->lastTopic;
+	}
+
 	/**
 	 * (non-PHPDoc)
 	 * @see \Rhapsody\ForumBundle\Model\ForumInterface::getName()
@@ -118,6 +135,11 @@ class Forum extends SocialContext implements ForumInterface, ActivitySourceInter
 		return $this->order;
 	}
 
+	public function getTopicCount()
+	{
+		return $this->topicCount;
+	}
+
 	/**
 	 * Sets the collection of topics on the forum.
 	 * @param array $topics the collection of topics.
@@ -134,6 +156,11 @@ class Forum extends SocialContext implements ForumInterface, ActivitySourceInter
 	public function setDescription($description)
 	{
 		$this->description = $description;
+	}
+
+	public function setLastTopic($topic)
+	{
+		$this->lastTopic = $topic;
 	}
 
 	/**
@@ -155,5 +182,10 @@ class Forum extends SocialContext implements ForumInterface, ActivitySourceInter
 	public function setOrder($order)
 	{
 		$this->order = $order;
+	}
+
+	public function setTopicCount($topicCount)
+	{
+		$this->topicCount = $topicCount;
 	}
 }

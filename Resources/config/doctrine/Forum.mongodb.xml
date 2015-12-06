@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <doctrine-mongo-mapping
-		xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
-				http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+    xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+        http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
-		<mapped-superclass name="Rhapsody\ForumBundle\Document\Forum" collection="rhapsody.forum.forum"
-				repository-class="Rhapsody\ForumBundle\Repository\ODM\MongoDB\ForumRepository">
+    <document name="Rhapsody\ForumBundle\Document\Forum" collection="rhapsody.forum.forum"
+        repository-class="Rhapsody\ForumBundle\Repository\ODM\MongoDB\ForumRepository">
 
-				<field name="id" fieldName="id" id="true" />
-				<field name="created" fieldName="created" type="date" />
-				<field name="privacy" fieldName="privacy" type="string" />
+        <field name="id" fieldName="id" id="true" />
+        <field name="name" fieldName="name" type="string" />
+        <field name="description" fieldName="description" type="bin" />
+        <field name="created" fieldName="created" type="date" />
+        <field name="privacy" fieldName="privacy" type="string" />
+        <field name="topicCount" fieldName="topicCount" type="int" />
+        <reference-one field="lastTopic">
+            <cascade>
+                <persist />
+                <merge />
+                <refresh />
+            </cascade>
+        </reference-one>
 
-		</mapped-superclass>
+    </document>
 
 </doctrine-mongo-mapping>

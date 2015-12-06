@@ -28,9 +28,7 @@
  */
 namespace Rhapsody\ForumBundle\Controller;
 
-use FOS\RestBundle\View\View;
-use Rhapsody\SocialBundle\Model\CategoryInterface;
-use Rhapsody\SocialBundle\Model\TopicInterface;
+use Rhapsody\ForumBundle\RhapsodyForumEvents;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -61,8 +59,11 @@ class TopicController extends Controller
 		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
 
 		$forum = $forumManager->findById($request->attributes->get('forum'));
-		$response = $delegate->createAction($request, $forum);
-		return $response->render();
+		list($topic, $post, $response) = $delegate->createAction($request, $forum);
+		return $response
+			->setRoute('rhapsody_forum_topic_view')
+			->mergeRouteParameters(array('forum' => $forum->id))
+			->render();
 	}
 
 	/**
@@ -102,8 +103,11 @@ class TopicController extends Controller
 
 		/** @var $forum \Rhapsody\ForumBundle\Model\ForumInterface */
 		$forum = $forumManager->findById($request->attributes->get('forum'));
-		$response = $delegate->listAction($request, $forum);
-		return $response->render();
+		list($topics, $response) = $delegate->listAction($request, $forum);
+		return $response
+			->mergeData(array('forum' => $forum))
+			->setTemplate('RhapsodyForumBundle:Topic:partials/list.html.twig')
+			->render();
 	}
 
 	/**
@@ -119,8 +123,19 @@ class TopicController extends Controller
 		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\ForumDelegate */
 		$delegate = $this->get('rhapsody.forum.controller.delegate.topic_delegate');
 
-		$response = $delegate->replyAction($request, $forum, $request->attributes->get('topic'));
-		return $response->render();
+		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
+
+		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
+		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
+
+		$forum = $forumManager->findById($request->attributes->get('forum'));
+		$topic = $topicManager->findByForumAndId($forum, $request->attributes->get('topic'));
+		list($topic, $response) = $delegate->replyAction($request, $forum, $topic);
+		return $response
+			->mergeData(array('forum' => $forum))
+			->setTemplate('RhapsodyForumBundle:Topic:reply.html.twig')
+			->render();
 	}
 
 	/**
@@ -130,27 +145,19 @@ class TopicController extends Controller
 	 */
 	public function newAction(Request $request)
 	{
-		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
-		$topicManager = $this->get('rhapsody.forum.doctrine.topic_manager');
+		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\ForumDelegate */
+		$delegate = $this->get('rhapsody.forum.controller.delegate.topic_delegate');
 
-		/** @var $formFactory \Rhapsody\SocialBundle\Form\Factory\FactoryInterface */
-		$formFactory = $this->get('rhapsody_forum.topic.form.factory');
+		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
 
 		/** @var $forum \Rhapsody\ForumBundle\Model\ForumInterface */
-		$forum = null;
-
-		/** @var $category \Rhapsody\SocialBundle\Model\CategoryInterface */
-		$category = null;
-
-		/** @var $category \Rhapsody\SocialBundle\Model\TopicInterface */
-		$topic = $topicManager->newTopic($forum, $category);
-		$form = $formFactory->createForm();
-		$form->setData($topic);
-
-		$view = View::create(array ('topic' => $topic, 'form' => $form->createView()))
-			->setFormat($request->getRequestFormat('html'))
-			->setTemplate('RhapsodyForumBundle:Topic:new.html.twig');
-		return $this->get('fos_rest.view_handler')->handle($view);
+		$forum = $forumManager->findById($request->attributes->get('forum'));
+		list($topic, $response) = $delegate->newAction($request, $forum);
+		return $response
+			->mergeData(array('forum' => $forum))
+			->setTemplate('RhapsodyForumBundle:Topic:new.html.twig')
+			->render();
 	}
 
 	/**
@@ -163,10 +170,22 @@ class TopicController extends Controller
 		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\ForumDelegate */
 		$delegate = $this->get('rhapsody.forum.controller.delegate.topic_delegate');
 
-		$forum = $request->attributes->get('forum');
-		$topic = $request->attributes->get('topic');
+		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
 
-		$response = $delegate->viewAction($request, $forum, $topic);
-		return $response->render();
+		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
+		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
+
+		$forum = $forumManager->findById($request->attributes->get('forum'));
+		$topic = $topicManager->findByForumAndId($forum, $request->attributes->get('topic'));
+		list($topic, $response) = $delegate->viewAction($request, $topic);
+
+		$user = $this->getUser();
+		$topicManager->viewTopic($topic, $user, RhapsodyForumEvents::VIEW_TOPIC);
+
+		return $response
+			->mergeData(array('forum' => $forum))
+			->setTemplate('RhapsodyForumBundle:Topic:view.html.twig')
+			->render();
 	}
 }

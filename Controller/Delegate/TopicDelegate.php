@@ -35,10 +35,14 @@ use Rhapsody\ComponentExtensionBundle\Exception\FormExceptionFactory;
 use Rhapsody\ForumBundle\Model\ForumInterface;
 use Rhapsody\ForumBundle\RhapsodyForumEvents;
 use Rhapsody\RestBundle\HttpFoundation\Controller\Delegate;
+use Rhapsody\SocialBundle\Controller\Delegate\TopicDelegate as BaseTopicDelegate;
+use Rhapsody\SocialBundle\Doctrine\PostManagerInterface;
+use Rhapsody\SocialBundle\Doctrine\TopicManagerInterface;
 use Rhapsody\SocialBundle\Event\TopicEventBuilder;
 use Rhapsody\SocialBundle\Model\TopicInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Rhapsody\SocialBundle\Model\SocialContextInterface;
 
 /**
  *
@@ -50,12 +54,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @version   $Id$
  * @since     1.0
  */
-class TopicDelegate extends Delegate
+class TopicDelegate extends BaseTopicDelegate
 {
 
-	public function __construct()
+	public function __construct(TopicManagerInterface $topicManager, PostManagerInterface $postManager)
 	{
-		parent::__construct();
+		parent::__construct($topicManager, $postManager);
 	}
 
 	/**
@@ -66,53 +70,9 @@ class TopicDelegate extends Delegate
 	 * @param \Rhapsody\ForumBundle\Model\ForumInterface $forum The forum.
 	 * @param mixed $category Optional. The category for the topic.
 	 */
-	public function createAction($request, $forum, $category = null)
+	public function createAction($request, SocialContextInterface $socialContext, $category = null)
 	{
-		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
-		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
-
-		/** @var $formFactory \Rhapsody\SocialBundle\Form\Factory\FactoryInterface */
-		$formFactory = $this->container->get('rhapsody_forum.topic.form.factory');
-
-		/** @var $user \Symfony\Component\Security\Core\User\UserInterface */
-		$user = $this->getUser();
-
-		/** @var $topic \Rhapsody\SocialBundle\Model\TopicInterface */
-		$topic = $topicManager->newTopic($forum, $category);
-		$form = $formFactory->createForm();
-		$form->setData($topic);
-		$form->handleRequest($request);
-		$data = $form->getData();
-
-		if (!$form->isValid()) {
-			$view = View::create(array('forum' => $forum, 'category' => $category,'topic' => $data, 'form' => $form->createView()))
-				->setFormat($request->getRequestFormat('html'))
-				->setSerializationContext(SerializationContext::create()->setGroups('context'))
-				->setTemplate('RhapsodyForumBundle:Topic:new.html.twig');
-			throw FormExceptionFactory::create('The form is invalid.')->setForm($form)->setView($view)->build();
-		}
-
-		$post = $form->get('post')->getData();
-
-		$topic = $topicManager->createTopic($data, $post, $user);
-		try {
-			$topicEventBuilder = TopicEventBuilder::create()
-				->setTopic($topic)
-				->setUser($this->getUser());
-			$event = $topicEventBuilder->build();
-
-			$eventDispatcher = $this->container->get('event_dispatcher');
-			$eventDispatcher->dispatch(RhapsodyForumEvents::NEW_TOPIC, $event);
-		}
-		catch (\Exception $ex) {
-			//$this->logger->error("An error occurred while trying ")
-			throw $ex;
-		}
-
-		$this->container->get('session')->getFlashBag()->add('success', 'rhapsody.forum.topic.created');
-		$view = RouteRedirectView::create('rhapsody_forum_topic_view', array('forum' => $forum->getId(), 'category' => $category, 'topic' => $data->getId()))
-			->setFormat($request->getRequestFormat('html'));
-		return $this->createResponseBuilder($view);
+		return parent::createAction($request, $socialContext);
 	}
 
 	/**
@@ -148,29 +108,9 @@ class TopicDelegate extends Delegate
 	 * @param array $options
 	 *     the options.
 	 */
-	public function listAction(Request $request, ForumInterface $forum)
+	public function listAction(Request $request, SocialContextInterface $socialContext)
 	{
-		try {
-			/** @var $paginator \Knp\Components\Pager\Paginator */
-			$paginator = $this->container->get('knp_paginator');
-
-			/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
-			$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
-
-			$page = $request->query->get('page', 1);
-			$topics = $topicManager->findAll($forum);
-
-			$pagination = $paginator->paginate($topics, $page, $this->container->getParameter('rhapsody_forum.pagination.topics_per_page'));
-
-			$view = View::create(array('topics' => $pagination, 'page' => $page))
-				->setFormat($request->getRequestFormat('html'))
-				->setTemplate('RhapsodyForumBundle:Topic:list.html.twig');
-			return $this->createResponseBuilder($view);
-		}
-		catch (\Exception $ex) {
-			$this->logger->error("Failed to render topics list");
-			throw $ex;
-		}
+		return parent::listAction($request, $socialContext);
 	}
 
 	/**
@@ -180,24 +120,9 @@ class TopicDelegate extends Delegate
 	 * @param \Rhapsody\ForumBundle\Model\ForumInterface $forum The forum.
 	 * @param mixed $category Optional. The category for the topic.
 	 */
-	public function newAction(Request $request, $forum, $category = null)
+	public function newAction(Request $request, SocialContextInterface $socialContext)
 	{
-		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
-		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
-
-		/** @var $formFactory \Rhapsody\SocialBundle\Form\Factory\FactoryInterface */
-		$formFactory = $this->container->get('rhapsody_forum.topic.form.factory');
-
-		/** @var $topic \Rhapsody\SocialBundle\Model\TopicInterface */
-		$topic = $topicManager->newTopic($forum, $category);
-		$form = $formFactory->createForm();
-		$form->setData($topic);
-
-		$view = View::create(array('forum' => $forum,'category' => $category, 'topic' => $topic,'form' => $form->createView()))
-			->setFormat($request->getRequestFormat('html'))
-			->setSerializationContext(SerializationContext::create()->setGroups('context'))
-			->setTemplate('RhapsodyForumBundle:Topic:new.html.twig');
-		return $this->createResponseBuilder($view);
+		return parent::newAction($request, $socialContext);
 	}
 
 	/**
@@ -235,50 +160,8 @@ class TopicDelegate extends Delegate
 	 * @param \Rhapsody\ForumBundle\Model\ForumInterface $forum The forum.
 	 * @param \Rhapsody\SocialBundle\Model\TopicInterface $topic The topic.
 	 */
-	public function viewAction(Request $request, ForumInterface $forum, $topicId)
+	public function viewAction(Request $request, TopicInterface $topic, $pageSize = 10)
 	{
-		/** @var $eventDispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
-		$eventDispatcher = $this->container->get('event_dispatcher');
-
-		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
-		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
-
-		/** @var $topicManager \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface */
-		$postManager = $this->container->get('rhapsody.forum.doctrine.post_manager');
-
-		/** @var $paginator \Knp\Components\Pager\Paginator */
-		$paginator = $this->get('knp_paginator');
-
-		try {
-			$page = $request->query->get('page', 1);
-			$_topic = $topicManager->findById($topicId);
-			$_posts = $postManager->findAllByTopic($_topic);
-
-			// ** Trigger the view of the topic, to update statistics, etc.
-			try {
-				$topicEventBuilder = TopicEventBuilder::create()
-					->setTopic($_topic)
-					->setUser($this->getUser());
-				$event = $topicEventBuilder->build();
-
-				$eventDispatcher = $this->container->get('event_dispatcher');
-				$eventDispatcher->dispatch(RhapsodyForumEvents::VIEW_TOPIC, $event);
-			}
-			catch (\Exception $ex) {
-				throw $ex;
-			}
-
-			// ** Paginate the posts, we don't want to return too many.
-			$paginatedPosts = $paginator->paginate($_posts, $page, $this->container->getParameter('rhapsody_forum.pagination.posts_per_page'));
-
-			$view = View::create(array('topic' => $_topic,'page' => $page,'posts' => $paginatedPosts))
-				->setFormat($request->getRequestFormat('html'))
-				->setSerializationContext(SerializationContext::create()->setGroups('context'))
-				->setTemplate('LorecallChronicleBundle:Topic:view.html.twig');
-			return $this->createResponseBuilder($view);
-		}
-		catch ( \Exception $ex ) {
-			throw $ex;
-		}
+		return parent::viewAction($request, $topic, $pageSize);
 	}
 }

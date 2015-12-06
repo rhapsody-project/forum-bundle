@@ -27,12 +27,8 @@
  */
 namespace Rhapsody\ForumBundle\Controller;
 
-use FOS\RestBundle\View\View;
-use JMS\Serializer\SerializationContext;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Rhapsody\ForumBundle\Form\Type\SearchType;
 
 /**
  *
@@ -65,7 +61,7 @@ class CategoryController extends Controller
 	 * @param Request The Request.
 	 * @return Response the Response.
 	 */
-	public function showAction(Request $request)
+	public function viewAction(Request $request)
 	{
 		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\CategoryDelegate */
 		$delegate = $this->get('rhapsody.forum.controller.delegate.category_delegate');
@@ -78,7 +74,7 @@ class CategoryController extends Controller
 
 		$forum = $forumManager->findById($request->attributes->get('forum'));
 		$category = $categoryManager->findBySlug($request->attributes->get('slug'));
-		return $delegate->showAction($request, $forum, $category);
+		return $delegate->viewAction($request, $forum, $category);
 	}
 
 }

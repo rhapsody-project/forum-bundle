@@ -27,6 +27,9 @@
  */
 namespace Rhapsody\ForumBundle\Doctrine;
 
+use Rhapsody\ForumBundle\Model\ForumInterface;
+use Rhapsody\SocialBundle\Model\PostInterface;
+use Rhapsody\SocialBundle\Model\TopicInterface;
 /**
  *
  * @author    Sean W. Quinn
@@ -40,4 +43,11 @@ namespace Rhapsody\ForumBundle\Doctrine;
 interface ForumManagerInterface
 {
 
+	/**
+	 *
+	 * @param ForumInterface $forum
+	 * @param TopicInterface $topic
+	 * @param PostInterface $post
+	 */
+	function updateForumActivityStats(ForumInterface $forum, TopicInterface $topic, PostInterface $post);
 }

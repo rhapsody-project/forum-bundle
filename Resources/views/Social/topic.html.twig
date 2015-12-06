@@ -30,6 +30,7 @@
 {% endblock %}
 
 {% block rhapsody_social_shared %}
+	{% set forum = _widget.socialContext %}
 	{% set first_post = _widget.post %}
 	<a href="{{ rhapsody_forum_topic_url(_widget) }}" class="subtle">
 		<div>

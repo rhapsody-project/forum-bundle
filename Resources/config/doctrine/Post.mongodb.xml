@@ -5,8 +5,8 @@
     xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
         http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
 
-    <mapped-superclass name="Rhapsody\ForumBundle\Document\Post" collection="rhapsody.forum.post"
-        repository-class="Rhapsody\ForumBundle\Document\PostRepository">
+    <document name="Rhapsody\ForumBundle\Document\Post" collection="rhapsody.forum.post"
+        repository-class="Rhapsody\ForumBundle\Repository\ODM\MongoDB\PostRepository">
 
         <field name="id" fieldName="id" id="true" />
         <field name="approved" fieldName="approved" type="boolean" />
@@ -40,6 +40,6 @@
           </index>
         </indexes>
 
-    </mapped-superclass>
+    </document>
 
 </doctrine-mongo-mapping>

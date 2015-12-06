@@ -34,6 +34,9 @@ use Rhapsody\ForumBundle\Model\ForumInterface;
 use Rhapsody\SocialBundle\Doctrine\ODM\MongoDB\SocialContextManager;
 use Rhapsody\SocialBundle\Factory\BuilderFactoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Rhapsody\SocialBundle\Model\TopicInterface;
+use Rhapsody\SocialBundle\Model\PostInterface;
+use Rhapsody\SocialBundle\Doctrine\TopicManagerInterface;
 
 /**
  *
@@ -48,13 +51,21 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ForumManager extends SocialContextManager implements ForumManagerInterface
 {
 
+	protected $topicManager;
+
 	/**
 	 * (non-PHPDoc)
 	 * @see Rhapsody\SocialBundle\Doctrine\SocialContextManager::__construct()
 	 */
-	public function __construct(ObjectManager $objectManager, EventDispatcherInterface $eventDispatcher, BuilderFactoryInterface $builderFactory, $class)
+	public function __construct(
+			ObjectManager $objectManager,
+			EventDispatcherInterface $eventDispatcher,
+			BuilderFactoryInterface $builderFactory,
+			TopicManagerInterface $topicManager,
+			$class)
 	{
 		parent::__construct($objectManager, $eventDispatcher, $builderFactory, $class);
+		$this->topicManager = $topicManager;
 		$this->logger = new Logger(get_class($this));
 	}
 
@@ -62,6 +73,11 @@ class ForumManager extends SocialContextManager implements ForumManagerInterface
 	{
 		$this->update($forum);
 		return $forum;
+	}
+
+	public function findAll($filter = array())
+	{
+		return $this->repository->findBy($filter, array('order' => 'asc'));
 	}
 
 	/**
@@ -73,4 +89,13 @@ class ForumManager extends SocialContextManager implements ForumManagerInterface
 		return $forum;
 	}
 
+	public function updateForumActivityStats(ForumInterface $forum, TopicInterface $topic, PostInterface $post)
+	{
+		$forum->setLastIndexed(new \DateTime);
+		$forum->setLastTopic($topic);
+
+		$topics = $this->topicManager->getTopicCountByForum($forum);
+		$forum->setTopicCount($topics);
+		$this->update($forum);
+	}
 }

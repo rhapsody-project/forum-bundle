@@ -30,16 +30,17 @@ namespace Rhapsody\ForumBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Rhapsody\ForumBundle\RhapsodyForumEvents;
 
 /**
  *
- * @author Sean W. Quinn
- * @category Rhapsody ForumBundle
- * @package Rhapsody\ForumBundle\Controller
+ * @author    Sean W. Quinn
+ * @category  Rhapsody ForumBundle
+ * @package   Rhapsody\ForumBundle\Controller
  * @copyright Copyright (c) 2013 Rhapsody Project
- * @license http://opensource.org/licenses/MIT
- * @version $Id$
- * @since 1.0
+ * @license   http://opensource.org/licenses/MIT
+ * @version   $Id$
+ * @since     1.0
  */
 class PostController extends Controller
 {
@@ -54,12 +55,22 @@ class PostController extends Controller
 		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\PostDelegate */
 		$delegate = $this->get('rhapsody.forum.controller.delegate.post_delegate');
 
+		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
+
 		/** @var $postManager \Rhapsody\ForumBundle\Doctrine\PostManagerInterface */
 		$topicManager = $this->container->get('rhapsody.forum.doctrine.topic_manager');
 
-		$topic = $topicManager->findById($request->query->get('topic'));
-		$response = $delegate->createAction($request, $topic);
-		return $response->render();
+		$user = $this->getUser();
+		$forum = $forumManager->findById($request->attributes->get('forum'));
+		$topic = $topicManager->findById($request->attributes->get('topic'));
+		list($topic, $post, $response) = $delegate->createAction($request, $topic);
+
+		$topicManager->replyToTopic($topic, $post, $user, RhapsodyForumEvents::REPLY_TO_TOPIC);
+		return $response
+			->setRoute('rhapsody_forum_topic_view')
+			->mergeRouteParameters(array('forum' => $forum->id))
+			->render();
 	}
 
 	/**
@@ -67,7 +78,7 @@ class PostController extends Controller
 	 * @param Request The Request.
 	 * @return Response the Response.
 	 */
-	public function deleteAction($id)
+	public function deleteAction(Request $request)
 	{
 		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\PostDelegate */
 		$delegate = $this->get('rhapsody.forum.controller.delegate.post_delegate');
@@ -78,7 +89,7 @@ class PostController extends Controller
 		/** @var $post \Rhapsody\SocialBundle\Model\PostInterface */
 		$post = $postManager->findById($request->attributes->get('post'));
 
-		$response = $delegate->saveAction($request, $post->getForum(), $post->getTopic(), $post);
+		list($topic, $post, $response) = $delegate->deleteAction($request, $post->getTopic(), $post);
 		return $response->render();
 	}
 
@@ -92,14 +103,19 @@ class PostController extends Controller
 		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\PostDelegate */
 		$delegate = $this->get('rhapsody.forum.controller.delegate.post_delegate');
 
+		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
+
 		/** @var $postManager \Rhapsody\ForumBundle\Doctrine\PostManagerInterface */
 		$postManager = $this->container->get('rhapsody.forum.doctrine.post_manager');
 
-		/** @var $post \Rhapsody\SocialBundle\Model\PostInterface */
+		$forum = $forumManager->findById($request->attributes->get('forum'));
 		$post = $postManager->findById($request->attributes->get('post'));
-
-		$response = $delegate->editAction($request, $post->getTopic(), $post);
-		return $response->render();
+		list($topic, $post, $response) = $delegate->editAction($request, $post->getTopic(), $post);
+		return $response
+			->mergeData(array('forum' => $forum))
+			->setTemplate('RhapsodyForumBundle:Post:edit.html.twig')
+			->render();
 	}
 
 	/**
@@ -112,13 +128,18 @@ class PostController extends Controller
 		/** @var $delegate \Rhapsody\ForumBundle\Controller\Delegate\PostDelegate */
 		$delegate = $this->get('rhapsody.forum.controller.delegate.post_delegate');
 
+		/** @var $forumManager \Rhapsody\ForumBundle\Doctrine\ForumManagerInterface */
+		$forumManager = $this->get('rhapsody.forum.doctrine.forum_manager');
+
 		/** @var $postManager \Rhapsody\ForumBundle\Doctrine\PostManagerInterface */
 		$postManager = $this->container->get('rhapsody.forum.doctrine.post_manager');
 
-		/** @var $post \Rhapsody\SocialBundle\Model\PostInterface */
+		$forum = $forumManager->findById($request->attributes->get('forum'));
 		$post = $postManager->findById($request->attributes->get('post'));
-
-		$response = $delegate->saveAction($request, $post->getTopic(), $post);
-		return $response->render();
+		list($topic, $data, $response) = $delegate->updateAction($request, $post->getTopic(), $post);
+		return $response
+			->setRoute('rhapsody_forum_topic_view')
+			->mergeRouteParameters(array('forum' => $forum->id))
+			->render();
 	}
 }

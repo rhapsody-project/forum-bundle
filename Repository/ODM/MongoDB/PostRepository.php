@@ -27,10 +27,7 @@
  */
 namespace Rhapsody\ForumBundle\Repository\ODM\MongoDB;
 
-use Doctrine\ODM\MongoDB\DocumentRepository;
-use Rhapsody\SocialBundle\Repository\PostRepositoryInterface;
-use Rhapsody\SocialBundle\Model\TopicInterface;
-use Rhapsody\SocialBundle\Model\PostInterface;
+use Rhapsody\SocialBundle\Repository\ODM\MongoDB\PostRepository as BasePostRepository;
 
 /**
  *
@@ -42,96 +39,9 @@ use Rhapsody\SocialBundle\Model\PostInterface;
  * @version   $Id$
  * @since     1.0
  */
-class PostRepository extends DocumentRepository implements PostRepositoryInterface
+class PostRepository extends BasePostRepository
 {
 
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findAllByTopic()
-	 */
-	public function findAllByTopic($topic)
-	{
-		$qb = $this->createQueryBuilder()
-			->field('topic.$id')->equals(new \MongoId($topic->getId()))
-			->sort('created', 'ASC');
-		$query = $qb->getQuery();
-		return array_values($query->execute()->toArray());
-	}
+	// Empty?
 
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findById()
-	 */
-	public function findById($id)
-	{
-		return $this->findOneBy(array('id' => $id));
-	}
-
-	public function findPositionByTopicAndPost(TopicInterface $topic, PostInterface $post)
-	{
-		$qb = $this->createQueryBuilder()
-			->field('_id')->lt(new \MongoId($post->getId()))
-			->field('topic.$id')->equals(new \MongoId($topic->getId()))
-			->sort('created', 'ASC')
-			->count();
-		$query = $qb->getQuery();
-		return $query->execute();
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
-	 */
-	public function findRecentByTopic($topic, $number)
-	{
-		$qb = $this->createQueryBuilder()
-			->field('topic.$id')->equals(new \MongoId($topic->getId()))
-			->sort('created', 'DESC')
-			->limit((int) $number);
-		$query = $qb->getQuery();
-		return array_values($query->execute()->toArray());
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findAllByTopic()
-	 */
-	public function getPostCountByTopic($topic)
-	{
-		$qb = $this->createQueryBuilder()
-			->field('topic.$id')->equals(new \MongoId($topic->getId()));
-		$query = $qb->getQuery();
-		return $query->count();
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::search()
-	 */
-	public function search($query)
-	{
-		$regexp = new \MongoRegex('/' . $query . '/i');
-		$qb = $this->createQueryBuilder()
-				->field('message')->equals($regexp)
-				->sort('created', 'ASC');
-		$query = $qb->getQuery();
-		return array_values($query->execute()->toArray());
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
-	 */
-	public function getPostBefore($post)
-	{
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\PostRepositoryInterface::findOneById()
-	 */
-	public function createNewPost()
-	{
-
-	}
 }

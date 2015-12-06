@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="row">
+    <table class="topic-list table table-striped">
+      <thead>
+        <tr>
+          <th data-sort-order="default" class="topic-column default">Forum</th>
+          <th data-sort-order="posts" class="topic-column posts sortable num">Topics</th>
+          <th data-sort-order="activity" class="topic-column activity sortable num">Activity</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for forum in forums %}
+          <tr class="forum-list-item has-excerpt">
+            <td class="main-link clearfix">
+              <a href="{{ rhapsody_forum_url(forum) }}" class="title">{{ forum.name }}</a>
+              <p>{{ forum.description }}</p>
+            </td>
+            <td class="num posts" title="This forum has {{ forum.topicCount }} topics">
+              <span title="{{ forum.topicCount }}">{{ forum.topicCount }}</span>
+            </td>
+            <td class="num activity">
+              {% set topic = forum.lastTopic %}
+              {% if topic is not empty %}
+              {% set timestamp = topic.lastUpdated is empty ? '' : topic.lastUpdated.getTimestamp() %}
+              <a href="">
+                <span class="relative-date" date-time="{{ timestamp }}" title="{{ timestamp|date('F j, Y g:ia') }}" data-format="tiny">{{ timestamp|time_since }}</span>
+              </a>
+              {% else %}
+              <span>No activity</span>
+              {% endif %}
+            </td>
+          </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

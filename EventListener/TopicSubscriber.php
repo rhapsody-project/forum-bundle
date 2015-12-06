@@ -27,16 +27,18 @@
  */
 namespace Rhapsody\ForumBundle\EventListener;
 
+use Rhapsody\ForumBundle\Doctrine\ForumManagerInterface;
+use Rhapsody\ForumBundle\Model\ForumInterface;
 use Rhapsody\ForumBundle\RhapsodyForumEvents;
+use Rhapsody\SocialBundle\Doctrine\ActivityManagerInterface;
 use Rhapsody\SocialBundle\Doctrine\TopicManagerInterface;
 use Rhapsody\SocialBundle\Event\TopicEventInterface;
+use Rhapsody\SocialBundle\EventListener\AbstractTopicSubscriber;
 use Rhapsody\SocialBundle\Factory\TemplateFactoryInterface;
-use Rhapsody\SocialBundle\Mailer\EmailTemplate;
 use Rhapsody\SocialBundle\Mailer\MailerInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Rhapsody\SocialBundle\Model\TopicInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Rhapsody\SocialBundle\Doctrine\ActivityManagerInterface;
 
 /**
  *
@@ -48,35 +50,10 @@ use Rhapsody\SocialBundle\Doctrine\ActivityManagerInterface;
  * @version   $Id$
  * @since     1.0
  */
-class TopicSubscriber implements EventSubscriberInterface
+class TopicSubscriber extends AbstractTopicSubscriber
 {
 
-	private $mailer;
-	private $router;
-	private $session;
-
-	/**
-	 * The {@link ActivityManager}
-	 * @var \Rhapsody\SocialBundle\Doctrine\ActivityManagerInterface
-	 */
-	private $activityManager;
-
-	private $auditManager;
-
-	/**
-	 * The {@link TemplateFactory}.
-	 * @var \Rhapsody\SocialBundle\Factory\TemplateFactoryInterface
-	 */
-	private $templateFactory;
-
-	/**
-	 * The {@link TopicManager}.
-	 * @var \Rhapsody\SocialBundle\Doctrine\TopicManagerInterface
-	 */
-	private $topicManager;
-
-	protected $senderEmail = 'noreply@lorecall.com';
-	protected $senderName = 'Lorecall';
+	protected $forumManager;
 
 	/**
 	 *
@@ -84,14 +61,17 @@ class TopicSubscriber implements EventSubscriberInterface
 	 * @param UrlGeneratorInterface $router
 	 * @param SessionInterface $session
 	 */
-	public function __construct(MailerInterface $mailer, UrlGeneratorInterface $router, SessionInterface $session, ActivityManagerInterface $activityManager, TopicManagerInterface $topicManager, TemplateFactoryInterface $templateFactory)
+	public function __construct(
+			MailerInterface $mailer,
+			UrlGeneratorInterface $router,
+			SessionInterface $session,
+			TemplateFactoryInterface $templateFactory,
+			ActivityManagerInterface $activityManager,
+			TopicManagerInterface $topicManager,
+			ForumManagerInterface $forumManager)
 	{
-		$this->mailer = $mailer;
-		$this->router = $router;
-		$this->session = $session;
-		$this->activityManager = $activityManager;
-		$this->topicManager = $topicManager;
-		$this->templateFactory = $templateFactory;
+		parent::__construct($mailer, $router, $session, $templateFactory, $activityManager, $topicManager);
+		$this->forumManager = $forumManager;
 	}
 
 	public static function getSubscribedEvents()
@@ -103,27 +83,39 @@ class TopicSubscriber implements EventSubscriberInterface
 		);
 	}
 
+	/**
+	 * Returns the uniform resource location (URL) of the topic.
+	 *
+	 * @param ForumInterface $forum the forum.
+	 * @param TopicInterface $topic the topic.
+	 * @return the uniform resource location (URL) of the topic.
+	 */
+	protected function getTopicUrl(ForumInterface $forum, TopicInterface $topic)
+	{
+		$route = 'rhapsody_forum_topic_view';
+		$url = $this->router->generate($route, array(
+			'forum' => $forum->getId(),
+			'topic' => $topic->getId()
+		), UrlGeneratorInterface::ABSOLUTE_URL);
+		return $url;
+	}
+
 	public function onNewTopic(TopicEventInterface $event)
 	{
-		/** @var $topic \Rhapsody\SocialBundle\Model\TopicInterface */
-		$topic  = $event->getTopic();
+		$topic    = $event->getTopic();
+		$post     = $event->getPost();
+		$author   = $event->getUser();
+		$forum    = $topic->getForum();
+		$url      = $this->getTopicUrl($forum, $topic);
+		$watchers = array(); //$this->forumManager->findFollowers($forum);
+		$users    = $this->exclude($watchers, array($author));
 
-		/** @var $author \Symfony\Component\Security\Core\User\UserInterface */
-		$author = $event->getUser();
+		$template = 'RhapsodyForumBundle:Mail:topic_new_email.txt.twig';
+		$data = array('author' => $author, 'forum' => $forum, 'topic' => $topic, 'post' => $post, 'url' => $url);
+		$this->notify($template, $data, $users);
+		$this->generateActivity($forum, $topic, $author);
 
-		/** @var $forum \Rhapsody\SocialBundle\Model\ForumInterface */
-		$forum  = $topic->getForum();
-
-		// 1. Look up users "watching" the forum. (not yet implemented)
-		// 2. Inform all of the watchers, sans author, that a new topic has been created.
-
-		$activity= $this->activityManager->newActivity(array(
-			'content' => $topic,
-			'source' => $forum,
-			'author' => $author,
-			'user' => null,
-		));
-		$this->activityManager->updateActivity($activity);
+		$this->forumManager->updateForumActivityStats($forum, $topic, $post);
 	}
 
 	/**
@@ -135,50 +127,21 @@ class TopicSubscriber implements EventSubscriberInterface
 	 */
 	public function onReplyToTopic(TopicEventInterface $event)
 	{
-		/** @var $topic \Rhapsody\SocialBundle\Model\TopicInterface */
-		$topic  = $event->getTopic();
+		$topic    = $event->getTopic();
+		$post     = $event->getPost();
+		$author   = $event->getUser();
+		$forum    = $topic->getForum();
+		$url      = $this->getTopicUrl($forum, $topic);
+		$watchers = $this->topicManager->findUsersByTopic($topic);
+		$users    = $this->exclude($watchers, array($author));
 
-		/** @var $post \Rhapsody\SocialBundle\Model\PostInterface */
-		$post   = $event->getPost();
+		$template = 'RhapsodyForumBundle:Mail:topic_reply_email.txt.twig';
+		$data = array('author' => $author, 'forum' => $forum, 'topic' => $topic, 'post' => $post, 'url' => $url);
+		$this->notify($template, $data, $users);
+		$this->generateActivity($forum, $post, $author);
 
-		/** @var $author \Symfony\Component\Security\Core\User\UserInterface */
-		$author = $event->getUser();
-
-		// ** Count the number of posts and replies for a given topic.
 		$this->topicManager->updateCounts($topic);
-
-		// ** The URL for viewing the forum post.
-		$url = $this->router->generate('rhapsody_forum_topic_view', array(
-				'topic' => $topic->getId(),
-		), UrlGeneratorInterface::ABSOLUTE_URL);
-
-		$users  = $this->topicManager->findUsersByTopic($topic);
-		foreach ($users as $user) {
-			// **
-			// Only send the comment email to people OTHER THAN the person who
-			// actually posted the comment. Why do they need to know they posted
-			// a comment? They already do! They just posted it! [SWQ]
-			if ($user->getId() !== $author->getId()) {
-				/** @var $user \Symfony\Component\Security\Core\User\UserInterface */
-				$email = $user->email;
-				if (!empty($email)) {
-					$data = array(
-							'author' => $author,
-							'topic'  => $topic,
-							'post'   => $post,
-							'url'    => $url,
-							'user'   => $user,
-					);
-
-					/** @var $message \Application\LorecallBundle\Model\Messaging\MessageTemplate */
-					$message = EmailTemplate::newInstance()
-						->setTemplate($this->templateFactory->getTopicReplyEmailTemplate())
-						->setTo($email)
-						->setFrom($this->senderEmail, $this->senderName);
-					$this->mailer->sendMessage($message, $data);
-				}
-			}
-		}
+		$this->forumManager->updateForumActivityStats($forum, $topic, $post);
 	}
 
 	/**

@@ -30,15 +30,17 @@ namespace Rhapsody\ForumBundle\Controller\Delegate;
 use FOS\RestBundle\View\RouteRedirectView;
 use FOS\RestBundle\View\View;
 use JMS\Serializer\SerializationContext;
-use Rhapsody\SocialBundle\Event\TopicEventBuilder;
 use Rhapsody\ForumBundle\Model\ForumInterface;
-use Rhapsody\SocialBundle\Model\PostInterface;
-use Rhapsody\SocialBundle\Model\TopicInterface;
 use Rhapsody\ForumBundle\RhapsodyForumEvents;
 use Rhapsody\RestBundle\HttpFoundation\Controller\Delegate;
+use Rhapsody\SocialBundle\Controller\Delegate\PostDelegate as BasePostDelegate;
+use Rhapsody\SocialBundle\Doctrine\PostManagerInterface;
+use Rhapsody\SocialBundle\Doctrine\TopicManagerInterface;
+use Rhapsody\SocialBundle\Event\TopicEventBuilder;
+use Rhapsody\SocialBundle\Model\PostInterface;
+use Rhapsody\SocialBundle\Model\TopicInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 
 /**
  *
@@ -50,8 +52,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @version   $Id$
  * @since     1.0
  */
-class PostDelegate extends Delegate
+class PostDelegate extends BasePostDelegate
 {
+
+	public function __construct(TopicManagerInterface $topicManager, PostManagerInterface $postManager)
+	{
+		parent::__construct($topicManager, $postManager);
+	}
 
 	/**
 	 * Delegate for rendering the page that allows the user to post a new topic to

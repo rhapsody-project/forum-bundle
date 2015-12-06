@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <doctrine-mapping
-		xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
-				http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+        http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-		<mapped-superclass name="Rhapsody\ForumBundle\Entity\Category" table="forum_catgeory"
-				repository-class="Rhapsody\ForumBundle\Repository\ORM\CategoryRepository">
+    <document name="Rhapsody\ForumBundle\Entity\Category" table="forum_catgeory"
+        repository-class="Rhapsody\ForumBundle\Repository\ORM\CategoryRepository">
 
-				<id name="id" type="integer" column="id">
-						<generator strategy="AUTO" />
-				</id>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO" />
+        </id>
 
-				<field name="created" column="created" type="date" />
-				<field name="description" column="description" type="text" nullable="true" />
-				<field name="lastIndexed" column="last_indexed" type="date" />
-				<field name="name" column="name" type="string" />
-				<field name="order" column="order" type="integer" />
-				<field name="privacy" column="privacy" type="string" />
-				<field name="slug" column="slug" type="string" unique="true" />
+        <field name="created" column="created" type="date" />
+        <field name="description" column="description" type="text" nullable="true" />
+        <field name="lastIndexed" column="last_indexed" type="date" />
+        <field name="name" column="name" type="string" />
+        <field name="order" column="order" type="integer" />
+        <field name="privacy" column="privacy" type="string" />
+        <field name="slug" column="slug" type="string" unique="true" />
 
-				<lifecycle-callbacks>
-						<lifecycle-callback type="prePersist" method="generateSlug" />
-						<lifecycle-callback type="preUpdate" method="generateSlug" />
-				</lifecycle-callbacks>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="generateSlug" />
+            <lifecycle-callback type="preUpdate" method="generateSlug" />
+        </lifecycle-callbacks>
 
-		</mapped-superclass>
+    </document>
 
 </doctrine-mapping>

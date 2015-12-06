@@ -27,6 +27,7 @@
 				<argument type="service" id="rhapsody.forum.doctrine.document_manager" />
 				<argument type="service" id="event_dispatcher" />
 				<argument type="service" id="rhapsody.forum.factory.forum_builder_factory" />
+				<argument type="service" id="rhapsody.forum.doctrine.topic_manager" />
 				<argument>%rhapsody_forum.model.forum.class%</argument>
 			</service>
 

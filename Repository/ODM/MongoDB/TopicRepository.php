@@ -27,10 +27,8 @@
  */
 namespace Rhapsody\ForumBundle\Repository\ODM\MongoDB;
 
-use Doctrine\ODM\MongoDB\DocumentRepository;
 use Rhapsody\ForumBundle\Model\ForumInterface;
-use Rhapsody\SocialBundle\Model\SocialContextInterface;
-use Rhapsody\SocialBundle\Repository\TopicRepositoryInterface;
+use Rhapsody\SocialBundle\Repository\ODM\MongoDB\TopicRepository as BaseTopicRepository;
 
 /**
  *
@@ -42,42 +40,21 @@ use Rhapsody\SocialBundle\Repository\TopicRepositoryInterface;
  * @version   $Id$
  * @since     1.0
  */
-class TopicRepository extends DocumentRepository implements TopicRepositoryInterface
+class TopicRepository extends BaseTopicRepository
 {
 	/**
 	 * (non-PHPDoc)
 	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findOneById()
 	 */
-	public function findById($id)
+	public function findOneByForumAndId(ForumInterface $forum, $id)
 	{
-		return $this->find($id);
+		$qb = $this->createQueryBuilder()
+			->field('_id')->equals(new \MongoId($id))
+			->field('socialContext.$id')->equals(new \MongoId($forum->getId()));
+		$query = $qb->getQuery();
+		return $query->getSingleResult();
 	}
 
-	public function findBySlug($slug)
-	{
-		return $this->find(array('slug' => $slug));
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findOneByCategoryAndSlug()
-	 */
-	public function findOneByCategoryAndSlug($category, $slug)
-	{
-		return $this->findOneBy(array(
-			'slug' => $slug,
-			'category.$id' => new \MongoId($category->getId())
-		));
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findOneById()
-	 */
-	public function findOneById($id)
-	{
-		return $this->find($id);
-	}
 
 	public function findAllByForum(ForumInterface $forum)
 	{
@@ -89,105 +66,8 @@ class TopicRepository extends DocumentRepository implements TopicRepositoryInter
 		return $this->findAllBySocialContextAndCategory($forum, $category);
 	}
 
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findAllBySocialContext()
-	 */
-	public function findAllBySocialContext(SocialContextInterface $socialContext)
+	public function getTopicCountByForum(ForumInterface $forum)
 	{
-		$qb = $this->createQueryBuilder()
-			->field('socialContext.$id')->equals(new \MongoId($socialContext->getId()))
-			->sort('lastUpdated', 'DESC');
-		$query = $qb->getQuery();
-
-		return array_values($query->execute()->toArray());
+		return $this->getTopicCountBySocialContext($forum);
 	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findAllBySocialContextAndCategory()
-	 */
-	public function findAllBySocialContextAndCategory(SocialContextInterface $socialContext, $category)
-	{
-		$qb = $this->createQueryBuilder('t')
-			->field('socialContext.$id')->equals(new \MongoId($socialContext->getId()))
-			->field('category.$id')->equals(new \MongoId($category->getId()))
-			->sort('lastUpdated', 'DESC');
-		$query = $qb->getQuery();
-		return array_values($query->execute()->toArray());
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::findLatestPosted()
-	 */
-	public function findLatestPosted(SocialContextInterface $socialContext, $number)
-	{
-		$qb = $this->createQueryBuilder()
-			->field('socialContext.$id')->equals(new \MongoId($socialContext->getId()))
-			->sort('lastUpdated', 'DESC')
-			->limit($number);
-		$query = $qb->getQuery();
-		return array_values($query->execute()->toArray());
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::search()
-	 */
-	public function search($query)
-	{
-		$regexp = new \MongoRegex('/' . $query . '/i');
-		$qb = $this->createQueryBuilder()
-				->field('subject')->equals($regexp)
-				->sort('lastUpdated', 'DESC');
-		$query = $qb->getQuery();
-		return array_values($query->execute()->toArray());
-	}
-
-	/**
-	 * (non-PHPDoc)
-	 * @see \Rhapsody\SocialBundle\Repository\TopicRepositoryInterface::incrementTopicNumViews()
-	 */
-	public function incrementTopicNumViews($topic)
-	{
-		$filter = array('_id' => new \MongoId($topic->getId()));
-		$expr = array(
-			'$inc' => array('viewCount' => 1)
-		);
-
-		// ** Perform increment update statement against the tuple.
-		$this->getDocumentManager()
-				->getDocumentCollection($this->getDocumentName())
-				->getMongoCollection()
-				->update($filter, $expr);
-	}
-
- 	public function updatePostCount($topic, $posts)
- 	{
-// 		$filter = array('_id' => new \MongoId($topic->getId()));
-// 		$expr = array(
-// 			'$set' => array('postCount' => $posts)
-// 		);
-//
-// 		// ** Perform increment update statement against the tuple.
-// 		$this->getDocumentManager()
-// 				->getDocumentCollection($this->getDocumentName())
-// 				->getMongoCollection()
-// 				->update($filter, $expr);
- 	}
-
- 	public function updateReplyCount($topic, $replies)
- 	{
-// 		$filter = array('_id' => new \MongoId($topic->getId()));
-// 		$expr = array(
-// 			'$set' => array('replyCount' => $posts)
-// 		);
-//
-// 		// ** Perform increment update statement against the tuple.
-// 		$this->getDocumentManager()
-// 				->getDocumentCollection($this->getDocumentName())
-// 				->getMongoCollection()
-// 				->update($filter, $expr);
- 	}
 }

@@ -25,24 +25,10 @@
  # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  #}
 {% trans_default_domain "RhapsodyForumBundle" %}
-<div>
-  <ul class="crumbs">
-      <li><a href="">Forum</a></li>
-      <li><a href="{{ rhapsody_forum_category_url(topic.category) }}">{{ topic.category.name|default('Uncategorized') }}</a></li>
-      <li><a href="{{ rhapsody_forum_topic_url(topic) }}">{{ topic.title }}</a></li>
-      <li>Edit</li>
-  </ul>
-  <section class="topic-reply">
-    <div class="row">
-      <div class="col-xs-12">
-        <form action="{{ rhapsody_forum_post_save_url(post) }}" method="post">
-          {{ form_widget(form) }}
-          <div class="pull-right">
-            <button type="submit" name="save" class="btn btn-primary">Save</button>
-            <span><a href="{{ rhapsody_forum_topic_url(topic) }}">Cancel</a></span>
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
-</div>
+
+{% extends 'RhapsodyForumBundle::layout.html.twig' %}
+{% block title %}Simple forum bundle for Symfony{% endblock %}
+
+{% block content %}
+	{% include 'RhapsodyForumBundle:Post:partials/edit.html.twig' %}
+{% endblock %}

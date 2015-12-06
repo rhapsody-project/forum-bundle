@@ -9,7 +9,7 @@
       <parameter key="rhapsody.forum.controller.delegate.forum_delegate.class">Rhapsody\ForumBundle\Controller\Delegate\ForumDelegate</parameter>
       <parameter key="rhapsody.forum.controller.delegate.post_delegate.class">Rhapsody\ForumBundle\Controller\Delegate\PostDelegate</parameter>
       <parameter key="rhapsody.forum.controller.delegate.topic_delegate.class">Rhapsody\ForumBundle\Controller\Delegate\TopicDelegate</parameter>
-		</parameters>
+    </parameters>
 
     <services>
       <service id="rhapsody.forum.controller.delegate.category_delegate" class="%rhapsody.forum.controller.delegate.category_delegate.class%">
@@ -24,13 +24,17 @@
         </call>
       </service>
 
-      <service id="rhapsody.forum.controller.delegate.post_delegate" class="%rhapsody.forum.controller.delegate.post_delegate.class%">
+      <service id="rhapsody.forum.controller.delegate.post_delegate" class="%rhapsody.social.controller.delegate.post_delegate.class%">
+        <argument type="service" id="rhapsody.forum.doctrine.topic_manager" />
+        <argument type="service" id="rhapsody.forum.doctrine.post_manager" />
         <call method="setContainer">
           <argument type="service" id="service_container" />
         </call>
       </service>
 
-      <service id="rhapsody.forum.controller.delegate.topic_delegate" class="%rhapsody.forum.controller.delegate.topic_delegate.class%">
+      <service id="rhapsody.forum.controller.delegate.topic_delegate" class="%rhapsody.social.controller.delegate.topic_delegate.class%">
+        <argument type="service" id="rhapsody.forum.doctrine.topic_manager" />
+        <argument type="service" id="rhapsody.forum.doctrine.post_manager" />
         <call method="setContainer">
           <argument type="service" id="service_container" />
         </call>

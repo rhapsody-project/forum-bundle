@@ -4,13 +4,18 @@
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
-	<route id="rhapsody_forum_index" path="/.{_format}" methods="GET">
-		<default key="_controller">RhapsodyForumBundle:Forum:index</default>
+	<route id="rhapsody_forum_list" path="/list.{_format}" methods="GET">
+		<default key="_controller">RhapsodyForumBundle:Forum:list</default>
+		<default key="_format">html</default>
+	</route>
+	
+	<route id="rhapsody_forum_search" path="/search.{_format}" methods="POST">
+		<default key="_controller">RhapsodyForumBundle:Forum:search</default>
 		<default key="_format">html</default>
 	</route>
 
-	<route id="rhapsody_forum_search" path="/search.{_format}" methods="POST">
-		<default key="_controller">RhapsodyForumBundle:Forum:search</default>
+	<route id="rhapsody_forum_view" path="/{forum}.{_format}" methods="GET">
+		<default key="_controller">RhapsodyForumBundle:Forum:view</default>
 		<default key="_format">html</default>
 	</route>
 
